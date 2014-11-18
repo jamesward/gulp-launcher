@@ -1,5 +1,8 @@
 #!/bin/sh
 
+BASEDIR=$(dirname $0)
+cd $BASEDIR
+
 readonly GULP=../../gulp
 
 run_test() {

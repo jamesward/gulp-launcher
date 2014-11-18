@@ -37,7 +37,7 @@ run_test() {
     echo "Test failed!"
     echo "Output:\n$OUTPUT"
     echo "Expected:\n$EXPECTED"
-    exit
+    exit 1
   fi
 }
 

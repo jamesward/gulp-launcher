@@ -2,7 +2,7 @@
 
 readonly GULP=../../gulp
 
-runTest() {
+run_test() {
   local DIR=$1
   local EXPECTED=$2
   local IN=$3
@@ -39,11 +39,26 @@ runTest() {
 }
 
 # Gulp dep isn't set and we tell the gulp launcher not to add it
-runTest "no_gulp_dep" "No Gulp dependency was found" "no"
+run_test "no_gulp_dep" "No Gulp dependency was found" "no"
 # Gulp dep isn't set and we tell the gulp launcher to add it
-runTest "no_gulp_dep" "Starting 'help'" "yes" "git checkout no_gulp_dep/package.json"
+run_test "no_gulp_dep" "Starting 'help'" "yes" "git checkout no_gulp_dep/package.json"
 
-# no_gulp_dep               node_0.10.x               node_tilde0.10.33
-# no_node                   node_0.10.x_with_gulpfile run-local-tests.sh
-# node_0.10.33              node_carret0.10.33
+# Node engine isn't set and we tell the gulp launcher not to add it
+run_test "no_node" "Exiting because the Node version could not be determined." "no"
+# Node engine isn't set and we tell the gulp launcher to add it
+run_test "no_node" "No gulpfile found" "yes" "git checkout no_node/package.json"
 
+# Node 0.10.x without a gulpfile
+run_test "node_0.10.x" "No gulpfile found"
+
+# Node 0.10.x with a gulpfile
+run_test "node_0.10.x_with_gulpfile" "Starting 'help'"
+
+# Node ~0.10.33 without a gulpfile
+run_test "node_tilde0.10.33" "No gulpfile found"
+
+# Node ^0.10.33 without a gulpfile
+run_test "node_carret0.10.33" "No gulpfile found"
+
+# Node 0.10.33 without a gulpfile
+run_test "node_0.10.33" "No gulpfile found"

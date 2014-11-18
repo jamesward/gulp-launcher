@@ -5,6 +5,7 @@
   "repository": "https://github.com/jamesward/gulp-launcher",
   "homepage": "http://www.jamesward.com",
   "author": "James Ward",
+  "private": true,
   "devDependencies": {
     "gulp": "^3.6.2"
   },

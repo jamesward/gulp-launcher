@@ -1,2 +1,5 @@
 language: sh
 script: ./tests/run-local-tests.sh
+os:
+  - linux
+  - osx

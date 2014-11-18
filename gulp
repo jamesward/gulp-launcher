@@ -101,10 +101,32 @@ getNodeVersion() {
 
   getRawNodeVersion
 
-  readonly NODE_VERSION_RESOLVE_URL=https://semver.io/node/resolve/$NODE_RAW_VERSION
+  if [ "$NODE_RAW_VERSION" == "null" ]; then
+    echo "The Node version was not specified."
+    read -t 10 -p "Should the latest be used? [yes] " USE_LATEST
+    if [ "$USE_LATEST" == "yes" ] || [ "$USE_LATEST" == "" ]; then
+      readonly NODE_VERSION=$(curl -s https://semver.io/node/stable)
+    fi
+  else
+    # does the raw version need to be resolved because it contains ^ x ~
+    if [ "${NODE_RAW_VERSION#*x}" != "$NODE_RAW_VERSION" ] ||
+       [ "${NODE_RAW_VERSION#*~}" != "$NODE_RAW_VERSION" ] ||
+       [ "${NODE_RAW_VERSION#*>}" != "$NODE_RAW_VERSION" ] ||
+       [ "${NODE_RAW_VERSION#*<}" != "$NODE_RAW_VERSION" ] ||
+       [ "${NODE_RAW_VERSION#*^}" != "$NODE_RAW_VERSION" ]; then
 
-  # todo - no curl
-  readonly NODE_VERSION=$(curl -s $NODE_VERSION_RESOLVE_URL)
+      # todo - no curl
+      readonly NODE_VERSION=$(curl -m 10 -s https://semver.io/node/resolve/$NODE_RAW_VERSION)
+    else
+     readonly NODE_VERSION=$NODE_RAW_VERSION
+    fi
+  fi
+
+  if [ -z $NODE_VERSION ]; then
+    echo "Exiting because the Node version could not be determined."
+    exit
+  fi
+
 }
 
 
@@ -117,27 +139,27 @@ downloadNode() {
   local NODE_DIR=$BASE_LOCAL_DIR/tools/node-$NODE_VERSION
 
   if [ $OS == $OS_LINUX ] && [ $ARCH == $ARCH_32 ]; then
-    readonly NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x86.tar.gz"
+    local NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x86.tar.gz"
     readonly NODE_PATH=$NODE_DIR/node-v${NODE_VERSION}-linux-x86/bin/node
     readonly NPM_PATH=$NODE_DIR/node-v${NODE_VERSION}-linux-x86/bin/npm
   elif [ $OS == $OS_LINUX ] && [ $ARCH == $ARCH_64 ]; then
-    readonly NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz"
+    local NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz"
     readonly NODE_PATH=$NODE_DIR/node-v${NODE_VERSION}-linux-x64/bin/node
     readonly NPM_PATH=$NODE_DIR/node-v${NODE_VERSION}-linux-x64/bin/npm
   elif [ $OS == $OS_MAC ] && [ $ARCH == $ARCH_32 ]; then
-    readonly NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-darwin-x86.tar.gz"
+    local NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-darwin-x86.tar.gz"
     readonly NODE_PATH=$NODE_DIR/node-v${NODE_VERSION}-darwin-x86/bin/node
     readonly NPM_PATH=$NODE_DIR/node-v${NODE_VERSION}-darwin-x86/bin/npm
   elif [ $OS == $OS_MAC ] && [ $ARCH == $ARCH_64 ]; then
-    readonly NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-darwin-x64.tar.gz"
+    local NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-darwin-x64.tar.gz"
     readonly NODE_PATH=$NODE_DIR/node-v${NODE_VERSION}-darwin-x64/bin/node
     readonly NPM_PATH=$NODE_DIR/node-v${NODE_VERSION}-darwin-x64/bin/npm
   elif [ $OS == $OS_CYGWIN ] && [ $ARCH == $ARCH_32 ]; then
-    readonly NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/node.exe"
+    local NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/node.exe"
     readonly NODE_PATH=$NODE_DIR/node.exe
     readonly NPM_PATH=$NODE_DIR/npm.exe
   elif [ $OS == $OS_CYGWIN ] && [ $ARCH == $ARCH_64 ]; then
-    readonly NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/x64/node.exe"
+    local NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/x64/node.exe"
     readonly NODE_PATH=$NODE_DIR/node.exe
     readonly NPM_PATH=$NODE_DIR/npm.exe
   fi
@@ -146,13 +168,13 @@ downloadNode() {
     local NODE_HOST="nodejs.org"
 
     if [ $OS == $OS_CYGWIN ]; then
-      echo "Downloading node $NODE_VERSION for $ARCH $OS"
+      echo "Downloading Node $NODE_VERSION for $ARCH $OS"
       wget $NODE_HOST $NODE_DOWNLOAD_PATH $NODE_DIR
 
       echo "Downloading npm ??? for $ARCH $OS"
       # todo
     else
-      echo "Downloading node $NODE_VERSION for $ARCH $OS"
+      echo "Downloading Node $NODE_VERSION for $ARCH $OS"
       $(mkdir $NODE_DIR)
       wget $NODE_HOST $NODE_DOWNLOAD_PATH $NODE_DIR/node.zip
       $(tar -zxv -f $NODE_DIR/node.zip -C $NODE_DIR)
@@ -169,13 +191,24 @@ downloadGulp() {
 
   downloadNode
 
-  # todo - verify package.json contains a gulp version
-  # .devDependencies.gulp
+  readonly GULP_RAW_VERSION=$(jq -r '.devDependencies.gulp' package.json)
 
-  # todo - only do this if package.json has changed
+  if [ "$GULP_RAW_VERSION" == "null" ]; then
+    echo "No Gulp dependency was found in your package.json file"
+    read -t 10 -p "Should the latest be used? [yes] " USE_LATEST
+    if [ "$USE_LATEST" == "yes" ] || [ "$USE_LATEST" == "" ]; then
+      $NPM_PATH install --save-dev gulp
+    fi
+  else
+    $NPM_PATH install
+  fi
 
-  # get gulp
-  $NPM_PATH install
+  readonly GULP_BIN=node_modules/gulp/bin/gulp.js
+
+  if [ ! -e $GULP_BIN ]; then
+    echo "Gulp could not be downloaded. Exiting."
+    exit
+  fi
 
 }
 
@@ -186,7 +219,7 @@ runGulp() {
   downloadGulp
 
   # Run gulp
-  $NODE_PATH node_modules/gulp/bin/gulp.js
+  $NODE_PATH $GULP_BIN
 }
 
 # Main

@@ -1,0 +1,14 @@
+{
+  "name": "gulp-launcher",
+  "version": "0.0.0",
+  "description": "Gulp Launcher",
+  "repository": "https://github.com/jamesward/gulp-launcher",
+  "homepage": "http://www.jamesward.com",
+  "author": "James Ward",
+  "devDependencies": {
+    "gulp": "^3.8.10"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
+}

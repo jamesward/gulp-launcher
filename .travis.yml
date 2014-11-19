@@ -1,4 +1,4 @@
-language: sh
+language: bash
 script: ./tests/run-local-tests.sh
 os:
   - linux

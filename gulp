@@ -5,6 +5,7 @@
 
 readonly LAUNCHER_VERSION=0.0.1
 readonly JQ_VERSION=1.3
+readonly DEFAULT_NPM_VERSION=1.4.12
 readonly BASE_LOCAL_DIR=$HOME/.gulp-launcher
 
 
@@ -206,11 +207,11 @@ function download_node() {
     elif [ $OS == $OS_CYGWIN ] && [ $ARCH == $ARCH_32 ]; then
       local NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/node.exe"
       readonly NODE_BIN=$NODE_DIR/node.exe
-      readonly NPM_BIN=$NODE_DIR/npm.exe
+      readonly NPM_BIN=$NODE_DIR/npm.cmd
     elif [ $OS == $OS_CYGWIN ] && [ $ARCH == $ARCH_64 ]; then
       local NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/x64/node.exe"
       readonly NODE_BIN=$NODE_DIR/node.exe
-      readonly NPM_BIN=$NODE_DIR/npm.exe
+      readonly NPM_BIN=$NODE_DIR/npm.cmd
     fi
 
     if [[ ! -e $NODE_DIR ]]; then
@@ -218,9 +219,11 @@ function download_node() {
 
       if [ $OS == $OS_CYGWIN ]; then
         echo "Downloading Node $NODE_VERSION for $ARCH $OS"
-
-        echo "Downloading npm ??? for $ARCH $OS"
-        # todo
+        echo "Downloading npm $DEFAULT_NPM_VERSION for $ARCH $OS"
+        $(mkdir $NODE_DIR)
+        $(curl -s -o $NODE_DIR/npm.zip http://nodejs.org/dist/npm/npm-$DEFAULT_NPM_VERSION.zip)
+        $(unzip $NODE_DIR/npm.zip -d $NODE_DIR)
+        $(rm $NODE_DIR/npm.zip)
       else
         echo "Downloading Node $NODE_VERSION for $ARCH $OS"
         $(mkdir $NODE_DIR)

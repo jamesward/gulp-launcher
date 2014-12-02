@@ -153,6 +153,7 @@ function get_node_version() {
 
     if [ -z $NODE_VERSION ]; then
       echo "Exiting because the Node version could not be determined."
+      echo "Set a specific node version in the package.json file."
       exit 1
     fi
   fi

@@ -207,11 +207,11 @@ function download_node() {
     elif [ $OS == $OS_CYGWIN ] && [ $ARCH == $ARCH_32 ]; then
       local NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/node.exe"
       readonly NODE_BIN=$NODE_DIR/node.exe
-      readonly NPM_BIN=$NODE_DIR/npm.cmd
+      readonly NPM_BIN="$NODE_BIN $NODE_DIR/node_modules/npm/cli.js"
     elif [ $OS == $OS_CYGWIN ] && [ $ARCH == $ARCH_64 ]; then
       local NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/x64/node.exe"
       readonly NODE_BIN=$NODE_DIR/node.exe
-      readonly NPM_BIN=$NODE_DIR/npm.cmd
+      readonly NPM_BIN="$NODE_BIN $NODE_DIR/node_modules/npm/cli.js"
     fi
 
     if [[ ! -e $NODE_DIR ]]; then

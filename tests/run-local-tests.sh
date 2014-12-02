@@ -65,7 +65,7 @@ run_test "node_0.10.x_without_gulpfile" "Starting 'default'" "yes" "rm node_0.10
 run_test "node_0.10.x_without_gulpfile" "No gulpfile.js found" "no"
 
 # Node 0.10.x without a package.json and auto-add one
-run_test "node_0.10.x_without_package_json" "Starting 'default'" "yes" "node_0.10.x_without_package_json/package.json"
+run_test "node_0.10.x_without_package_json" "Starting 'default'" "yes" "rm node_0.10.x_without_package_json/package.json"
 # Node 0.10.x without a package.json but don't auto-add one
 run_test "node_0.10.x_without_package_json" "No package.json found" "no"
 

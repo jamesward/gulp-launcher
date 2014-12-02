@@ -1,0 +1,5 @@
+install:
+  - cinst Cygwin
+test_script:
+  - bash ./tests/run-local-tests.sh
+  - tests\run-local-tests.bat

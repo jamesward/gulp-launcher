@@ -11,7 +11,7 @@ run_test() {
   local IN=$3
   local CLEANUP=$4
 
-  echo "Running the gulp launcher in $DIR"
+  printf "Running the gulp launcher in $DIR\n\n"
 
   # start fresh
   local OUTPUT=$(rm -rf ~/.gulp-launcher)
@@ -32,11 +32,11 @@ run_test() {
   fi
 
   if [ "${OUTPUT#*$EXPECTED}" != "$OUTPUT" ]; then
-    echo "Test passed!"
+    printf "Test passed!\n\n"
   else
-    echo "Test failed!"
-    echo "Output:\n$OUTPUT"
-    echo "Expected:\n$EXPECTED"
+    printf "Test failed!\n\n"
+    printf "Output:\n$OUTPUT\n\n"
+    printf "Expected:\n$EXPECTED\n\n"
     exit 1
   fi
 }

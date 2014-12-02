@@ -28,7 +28,7 @@ function get_system_info() {
 
     if [ "$ARCH" != "$ARCH_32" ] && [ "$ARCH" != "$ARCH_64" ]; then
       echo "Did not recognize system architecture: $ARCH"
-      exit
+      exit 1
     fi
 
     if [ "$(uname)" == "Darwin" ]; then
@@ -41,7 +41,7 @@ function get_system_info() {
       readonly OS=$OS_LINUX
     else
       echo "Did not recognize OS: $(uname)"
-      exit
+      exit 1
     fi
   fi
 }
@@ -153,7 +153,7 @@ function get_node_version() {
 
     if [ -z $NODE_VERSION ]; then
       echo "Exiting because the Node version could not be determined."
-      exit
+      exit 1
     fi
   fi
 }
@@ -264,7 +264,7 @@ download_gulp() {
 
     if [ ! -e $GULP_BIN ]; then
       echo "Gulp could not be downloaded. Exiting."
-      exit
+      exit 1
     fi
   fi
 }

@@ -33,14 +33,14 @@ function get_system_info() {
 
     if [ "$(uname)" == "Darwin" ]; then
       readonly OS=$OS_MAC
+    elif [ "$(uname -s)" == "CYGWIN_NT-5.1" ] || [ "$(uname -s)" == "CYGWIN_NT-6.1" ] || [ "$(uname -s)" == "CYGWIN_NT-6.1-WOW64" ]; then
+      readonly OS=$OS_CYGWIN
     elif [ "$(uname -o)" == "GNU/Linux" ]; then
       readonly OS=$OS_LINUX
     elif [ "$(uname -o)" == "Cygwin" ]; then
       readonly OS=$OS_CYGWIN
-    elif [ "$(uname -o)" == "Windows_NT" ]; then
-      readonly OS=$OS_CYGWIN
     else
-      echo "Did not recognize OS: $(uname -o)"
+      echo "Did not recognize OS: $(uname)"
       exit
     fi
   fi

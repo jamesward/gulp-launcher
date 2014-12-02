@@ -37,6 +37,9 @@ function get_system_info() {
       readonly OS=$OS_LINUX
     elif [ "$(uname -o)" == "Cygwin" ]; then
       readonly OS=$OS_CYGWIN
+    else
+      echo "Did not recognize OS: $(uname -o)"
+      exit
     fi
   fi
 }

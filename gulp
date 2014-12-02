@@ -220,7 +220,7 @@ function download_node() {
       if [ $OS == $OS_CYGWIN ]; then
         echo "Downloading Node $NODE_VERSION for $ARCH $OS"
         echo "Downloading npm $DEFAULT_NPM_VERSION for $ARCH $OS"
-        $(mkdir $NODE_DIR)
+        $(mkdir $NODE_DIR/node_modules)
         $(curl -s -o $NODE_DIR/npm.tgz http://nodejs.org/dist/npm/npm-$DEFAULT_NPM_VERSION.tgz)
         $(tar -xf $NODE_DIR/npm.tgz -C $NODE_DIR/node_modules)
         $(cp $NODE_DIR/node_modules/npm/bin/npm.cmd $NODE_DIR)

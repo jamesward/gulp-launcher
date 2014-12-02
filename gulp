@@ -83,9 +83,9 @@ function download_jq() {
       elif [ "$OS" == "$OS_MAC" ] && [ "$ARCH" == "$ARCH_64" ]; then
         local JQ_PATH="/jq/download/osx64/jq-$JQ_VERSION/jq"
       elif [ "$OS" == "$OS_CYGWIN" ] && [ "$ARCH" == "$ARCH_32" ]; then
-        local JQ_PATH="/jq/download/win32/jq-$JQ_VERSION/jq.exe"
+        local JQ_PATH="/jq/download/win32/jq-$JQ_VERSION/jq-$JQ_VERSION.exe"
       elif [ "$OS" == "$OS_CYGWIN" ] && [ "$ARCH" == "$ARCH_64" ]; then
-        local JQ_PATH="/jq/download/win64/jq-$JQ_VERSION/jq.exe"
+        local JQ_PATH="/jq/download/win64/jq-$JQ_VERSION/jq-$JQ_VERSION.exe"
       fi
 
       echo "Downloading jq $JQ_VERSION for $ARCH $OS"

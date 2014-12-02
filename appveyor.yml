@@ -3,3 +3,4 @@ install:
 test_script:
   - bash ./tests/run-local-tests.sh
   - tests\run-local-tests.bat
+build: off

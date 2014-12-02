@@ -8,34 +8,36 @@ readonly JQ_VERSION=1.3
 readonly BASE_LOCAL_DIR=$HOME/.gulp-launcher
 
 
+readonly OS_LINUX="LINUX"
+readonly OS_MAC="MAC"
+readonly OS_CYGWIN="CYGWIN"
+
+readonly ARCH_32="i686"
+readonly ARCH_64="x86_64"
+
 # Gets the system os and architecture
 #
 # Sets:
 #  OS
-#  OS_LINUX
-#  OS_MAC
-#  OS_CYGWIN
 #  ARCH
-#  ARCH_32
-#  ARCH_64
 #  
 function get_system_info() {
-  if [ "$OS" == "" ]; then
-
-    readonly ARCH_32="i686"
-    readonly ARCH_64="x86_64"
+  if [ "$OS" != "$OS_LINUX" ] && [ "$OS" != "$OS_MAC" ] && [ "$OS" != "$OS_CYGWIN" ]; then
 
     readonly ARCH=$(uname -m)
 
-    readonly OS_LINUX="LINUX"
-    readonly OS_MAC="MAC"
-    readonly OS_CYGWIN="CYGWIN"
+    if [ "$ARCH" != "$ARCH_32" ] && [ "$ARCH" != "$ARCH_64" ]; then
+      echo "Did not recognize system architecture: $ARCH"
+      exit
+    fi
 
     if [ "$(uname)" == "Darwin" ]; then
       readonly OS=$OS_MAC
     elif [ "$(uname -o)" == "GNU/Linux" ]; then
       readonly OS=$OS_LINUX
     elif [ "$(uname -o)" == "Cygwin" ]; then
+      readonly OS=$OS_CYGWIN
+    elif [ "$(uname -o)" == "Windows_NT" ]; then
       readonly OS=$OS_CYGWIN
     else
       echo "Did not recognize OS: $(uname -o)"
@@ -72,17 +74,17 @@ function download_jq() {
     
       local JQ_HOST="stedolan.github.io"
 
-      if [ $OS == $OS_LINUX ] && [ $ARCH == $ARCH_32 ]; then
+      if [ "$OS" == "$OS_LINUX" ] && [ "$ARCH" == "$ARCH_32" ]; then
         local JQ_PATH="/jq/download/linux32/jq-$JQ_VERSION/jq"
-      elif [ $OS == $OS_LINUX ] && [ $ARCH == $ARCH_64 ]; then
+      elif [ "$OS" == "$OS_LINUX" ] && [ "$ARCH" == "$ARCH_64" ]; then
         local JQ_PATH="/jq/download/linux64/jq-$JQ_VERSION/jq"
-      elif [ $OS == $OS_MAC ] && [ $ARCH == $ARCH_32 ]; then
+      elif [ "$OS" == "$OS_MAC" ] && [ "$ARCH" == "$ARCH_32" ]; then
         local JQ_PATH="/jq/download/osx32/jq-$JQ_VERSION/jq"
-      elif [ $OS == $OS_MAC ] && [ $ARCH == $ARCH_64 ]; then
+      elif [ "$OS" == "$OS_MAC" ] && [ "$ARCH" == "$ARCH_64" ]; then
         local JQ_PATH="/jq/download/osx64/jq-$JQ_VERSION/jq"
-      elif [ $OS == $OS_CYGWIN ] && [ $ARCH == $ARCH_32 ]; then
+      elif [ "$OS" == "$OS_CYGWIN" ] && [ "$ARCH" == "$ARCH_32" ]; then
         local JQ_PATH="/jq/download/win32/jq-$JQ_VERSION/jq"
-      elif [ $OS == $OS_CYGWIN ] && [ $ARCH == $ARCH_64 ]; then
+      elif [ "$OS" == "$OS_CYGWIN" ] && [ "$ARCH" == "$ARCH_64" ]; then
         local JQ_PATH="/jq/download/win64/jq-$JQ_VERSION/jq"
       fi
 

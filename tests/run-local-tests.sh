@@ -33,6 +33,8 @@ run_test() {
 
   if [ "${OUTPUT#*$EXPECTED}" != "$OUTPUT" ]; then
     printf "Test passed!\n\n"
+    printf "Output:\n$OUTPUT\n\n"
+    printf "Expected:\n$EXPECTED\n\n"
   else
     printf "Test failed!\n\n"
     printf "Output:\n$OUTPUT\n\n"

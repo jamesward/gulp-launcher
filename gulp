@@ -221,9 +221,10 @@ function download_node() {
         echo "Downloading Node $NODE_VERSION for $ARCH $OS"
         echo "Downloading npm $DEFAULT_NPM_VERSION for $ARCH $OS"
         $(mkdir $NODE_DIR)
-        $(curl -s -o $NODE_DIR/npm.zip http://nodejs.org/dist/npm/npm-$DEFAULT_NPM_VERSION.zip)
-        $(tar -xf $NODE_DIR/npm.zip -C $NODE_DIR)
-        $(rm $NODE_DIR/npm.zip)
+        $(curl -s -o $NODE_DIR/npm.tgz http://nodejs.org/dist/npm/npm-$DEFAULT_NPM_VERSION.tgz)
+        $(tar -xf $NODE_DIR/npm.tgz -C $NODE_DIR/node_modules)
+        $(cp $NODE_DIR/node_modules/npm/bin/npm.cmd $NODE_DIR)
+        $(rm $NODE_DIR/npm.tgz)
       else
         echo "Downloading Node $NODE_VERSION for $ARCH $OS"
         $(mkdir $NODE_DIR)

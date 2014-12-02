@@ -217,21 +217,18 @@ function download_node() {
     if [[ ! -e $NODE_DIR ]]; then
       local NODE_HOST="nodejs.org"
 
-      if [ $OS == $OS_CYGWIN ]; then
+      $(mkdir -p $NODE_DIR)
 
+      if [ $OS == $OS_CYGWIN ]; then
         echo "Downloading Node $NODE_VERSION for $ARCH $OS"
         $(mkdir -p $NODE_DIR)
         $(curl -s -o $NODE_BIN https://$NODE_HOST$NODE_DOWNLOAD_PATH)
 
         echo "Downloading npm $DEFAULT_NPM_VERSION for $ARCH $OS"
-        $(mkdir -p $NODE_DIR/node_modules)
-        $(curl -s -o $NODE_DIR/npm.tgz http://$NODE_HOST/dist/npm/npm-$DEFAULT_NPM_VERSION.tgz)
-        $(tar -xf $NODE_DIR/npm.tgz -C $NODE_DIR/node_modules)
-        $(cp $NODE_DIR/node_modules/npm/bin/npm.cmd $NODE_DIR)
-        $(rm $NODE_DIR/npm.tgz)
+        $(curl -s -o $NODE_DIR/npm.zip http://$NODE_HOST/dist/npm/npm-$DEFAULT_NPM_VERSION.zip)
+        $(tar -z -x -f $NODE_DIR/npm.zip -C $NODE_DIR)
+        $(rm $NODE_DIR/npm.zip)
       else
-        $(mkdir -p $NODE_DIR)
-
         echo "Downloading Node $NODE_VERSION for $ARCH $OS"
         $(curl -s -o $NODE_DIR/node.zip https://$NODE_HOST$NODE_DOWNLOAD_PATH)
         $(tar -z -x -f $NODE_DIR/node.zip -C $NODE_DIR)

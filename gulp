@@ -304,7 +304,7 @@ if [ ! -e package.json ]; then
   if [ "$CREATE_PACKAGE_JSON" == "yes" ] || [ "$CREATE_PACKAGE_JSON" == "" ]; then
     cat <<EOF > package.json
 {
-  "name": "YOUR PROJECT NAME",
+  "name": "YOUR_PROJECT_NAME",
   "version": "0.0.0",
   "description": "YOUR PROJECT DESCRIPTION",
   "devDependencies": {

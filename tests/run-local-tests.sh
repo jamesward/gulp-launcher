@@ -57,19 +57,21 @@ run_test "no_gulp_dep" "Starting 'help'" "yes" "git checkout no_gulp_dep/package
 # Node engine isn't set and we tell the gulp launcher not to add it
 run_test "no_node" "Exiting because the Node version could not be determined." "no"
 # Node engine isn't set and we tell the gulp launcher to add it
-run_test "no_node" "No gulpfile found" "yes" "git checkout no_node/package.json"
+run_test "no_node" "Starting 'help'" "yes" "git checkout no_node/package.json"
 
-# Node 0.10.x without a gulpfile
-run_test "node_0.10.x" "No gulpfile found"
+# Node 0.10.x without a gulpfile and auto-add one
+run_test "node_0.10.x_without_gulpfile" "Starting 'default'" "yes" "rm node_0.10.x_without_gulpfile/gulpfile.js"
+# Node 0.10.x without a gulpfile but don't auto-add one
+run_test "node_0.10.x_without_gulpfile" "No gulpfile.js found" "no"
 
 # Node 0.10.x with a gulpfile
-run_test "node_0.10.x_with_gulpfile" "Starting 'help'"
+run_test "node_0.10.x" "Starting 'help'"
 
-# Node ~0.10.33 without a gulpfile
-run_test "node_tilde0.10.33" "No gulpfile found"
+# Node ~0.10.33
+run_test "node_tilde0.10.33" "Starting 'help'"
 
-# Node ^0.10.33 without a gulpfile
-run_test "node_carret0.10.33" "No gulpfile found"
+# Node ^0.10.33
+run_test "node_carret0.10.33" "Starting 'help'"
 
-# Node 0.10.33 without a gulpfile
-run_test "node_0.10.33" "No gulpfile found"
+# Node 0.10.33
+run_test "node_0.10.33" "Starting 'help'"

@@ -5,6 +5,12 @@ cd $BASEDIR
 
 readonly GULP=../../gulp
 
+# Runs a test
+#
+# Usage:
+#
+#  run_test base_dir expected_output [stdin] [cleanup]
+#
 run_test() {
   local DIR=$1
   local EXPECTED=$2

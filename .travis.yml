@@ -1,5 +1,5 @@
 language: bash
-script: ./tests/run-local-tests.sh
+script: ./tests/tests.sh
 os:
   - linux
   - osx

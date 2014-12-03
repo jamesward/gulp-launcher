@@ -1,5 +1,5 @@
-:: Test the gulp.bat script
-@echo OFF
+:: Test the Windows Gulp Launcher
+::@echo OFF
 
 set BASEDIR=%~dp0
 cd /d %BASEDIR%
@@ -46,12 +46,12 @@ goto :eof
     exit /b
   )
 
-  cd ..
-
   if defined %CLEANUP% (
     %CLEANUP%
     exit /b
   )
+
+  cd ..
 
   echo Output:
   echo.

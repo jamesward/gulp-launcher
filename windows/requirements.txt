@@ -1,3 +1,2 @@
 PyInstaller==2.1
-mercurial==3.2.1
-wsgiref==0.1.2
+pywin32==214

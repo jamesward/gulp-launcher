@@ -1,6 +1,6 @@
 install:
   - cinst Cygwin
 test_script:
-  - bash ./tests/tests.sh
   - tests\tests.bat
+  - bash ./tests/tests.sh
 build: off

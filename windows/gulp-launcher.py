@@ -1,4 +1,8 @@
-import urllib2, os
+# gulp-laucher for windows: run build.bat to turn into a standalone .exe file
+import urllib2, os, platform
+
+ARCHITECTURE = platform.architecture()[0] # 64bit or 32bit
+
 def testclean(fname):
     if os.path.exists(fname): os.remove(fname) 
 testclean("package.json")

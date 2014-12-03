@@ -32,7 +32,7 @@ goto :eof
   echo Running the gulp launcher in %DIR%
 
   :: start fresh
-  rmdir /s /q %APPDATA%\Roaming\gulp-launcher
+  rmdir /s /q %APPDATA%\gulp-launcher
   rmdir /s /q %DIR%\node_modules
 
   cd %DIR%

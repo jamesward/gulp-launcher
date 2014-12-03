@@ -5,8 +5,8 @@ testclean("package.json")
 testclean("gulpfile.js")
 
 LAUNCHER_VERSION = "0.0.1"
-JQ_VERSION = "1.3"
-BASE_LOCAL_DIR = "$HOME/.gulp-launcher"
+BASE_LOCAL_DIR = "{HOME}\\gulp-launcher".format(HOME=os.getenv("APPDATA"))
+print(BASE_LOCAL_DIR)
 
 package_json = """\
 {{
@@ -22,9 +22,9 @@ package_json = """\
   }}
 }}
 """.format(
-        DEFAULT_NODE_VERSION = "0.10.33",
-        DEFAULT_NPM_VERSION = "1.4.12",
-        DEFAULT_GULP_VERSION = "3.8.10")
+DEFAULT_NODE_VERSION = "0.10.33",
+DEFAULT_NPM_VERSION = "1.4.12",
+DEFAULT_GULP_VERSION = "3.8.10")
 
 gulpfile_js = """\
 var gulp = require('gulp');

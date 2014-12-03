@@ -1,19 +1,30 @@
 import urllib2, os
+def testclean(fname):
+    if os.path.exists(fname): os.remove(fname) 
+testclean("package.json")
+testclean("gulpfile.js")
+
+LAUNCHER_VERSION = "0.0.1"
+JQ_VERSION = "1.3"
+BASE_LOCAL_DIR = "$HOME/.gulp-launcher"
 
 package_json = """\
-{
+{{
   "name": "YOUR_PROJECT_NAME",
   "version": "0.0.0",
   "description": "YOUR PROJECT DESCRIPTION",
-  "devDependencies": {
-    "gulp": "$DEFAULT_GULP_VERSION"
-  },
-  "engines": {
-    "node": "$DEFAULT_NODE_VERSION",
-    "npm": "$DEFAULT_NPM_VERSION"
-  }
-}
-"""
+  "devDependencies": {{
+    "gulp": "{DEFAULT_GULP_VERSION}"
+  }},
+  "engines": {{
+    "node": "{DEFAULT_NODE_VERSION}",
+    "npm": "{DEFAULT_NPM_VERSION}"
+  }}
+}}
+""".format(
+        DEFAULT_NODE_VERSION = "0.10.33",
+        DEFAULT_NPM_VERSION = "1.4.12",
+        DEFAULT_GULP_VERSION = "3.8.10")
 
 gulpfile_js = """\
 var gulp = require('gulp');

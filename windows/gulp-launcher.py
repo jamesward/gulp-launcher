@@ -55,29 +55,70 @@ ensure_file_exists("gulpfile.js", gulpfile_js)
 
 def get_raw_node_version():
     package = json.load(file("package.json"))
-    return package['engines']['node']
+    if package.has_key('engines') and package.has_key('node'):
+        return package['engines']['node']
+    return None 
 
 print get_raw_node_version()
 
 def get_node_version():
-    if "NODE_VERSION" in globals(): return NODE_VERSION
-    if get_raw_node_version() == "null":
+    if "NODE_VERSION" in globals():
+        print "in globals"
+        return NODE_VERSION
+    if not get_raw_node_version():
         print("The Node version was not specified.")
         if answer_is_yes("Should the latest be used?"):
-            NODE_VERSION=$(curl -s https://semver.io/node/stable)
-    # else:
-    #     # does the raw version need to be resolved because it contains: ^ x ~ < >
-    #     if [ "${NODE_RAW_VERSION#*x}" != "$NODE_RAW_VERSION" ] ||
-    #        [ "${NODE_RAW_VERSION#*~}" != "$NODE_RAW_VERSION" ] ||
-    #        [ "${NODE_RAW_VERSION#*>}" != "$NODE_RAW_VERSION" ] ||
-    #        [ "${NODE_RAW_VERSION#*<}" != "$NODE_RAW_VERSION" ] ||
-    #        [ "${NODE_RAW_VERSION#*^}" != "$NODE_RAW_VERSION" ]:
-    #           readonly NODE_VERSION=$(curl -m 10 -s https://semver.io/node/resolve/$NODE_RAW_VERSION)
-    #     else:
-    #        readonly NODE_VERSION=$NODE_RAW_VERSION
+            NODE_VERSION = urllib2.urlopen("https://semver.io/node/stable").read()
+        else:
+            print("Exiting because the Node version could not be determined.")
+            print("Set a specific node version in the package.json file.")
+            sys.exit()
+    else:
+        nrv = get_raw_node_version()
+        if any([c in nrv for c in "^x~<>"]):
+            NODE_VERSION = urllib2.urlopen("https://semver.io/node/resolve/" + nrv).read()
+        else:
+            NODE_VERSION = get_raw_node_version()
 
-    # if [ -z $NODE_VERSION ]:
-    #     print("Exiting because the Node version could not be determined.")
-    #     print("Set a specific node version in the package.json file.")
-    #     sys.exit()
+    if "NODE_VERSION" not in globals():
+        NODE_VERSION = urllib2.urlopen("https://semver.io/node/stable").read()
 
+    return NODE_VERSION
+
+print get_node_version()
+
+def download_node():
+
+    get_system_info()
+    get_node_version()
+
+    # download Node binary
+    NODE_DIR= BASE_LOCAL_DIR + "/tools/node-" + NODE_VERSION
+
+    if platform.system() == "Windows":
+        NODE_BIN = NODE_DIR + "/node.exe"
+        NPM_BIN="$NODE_BIN $NODE_DIR/node_modules/npm/cli.js"
+        if ARCHITECTURE == "32bit":
+            NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/x64/node.exe"
+        if ARCHITECTURE == "64bit":
+            NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/x64/node.exe"
+
+    # if [[ ! -e $NODE_DIR ]]:
+    #     NODE_HOST="nodejs.org"
+
+    #     $(mkdir -p $NODE_DIR)
+
+    #     if [ $OS == $OS_CYGWIN ]:
+    #         echo "Downloading Node $NODE_VERSION for ARCHITECTURE $OS"
+    #         $(curl -s -o $NODE_BIN https://$NODE_HOST$NODE_DOWNLOAD_PATH)
+
+    #         echo "Downloading npm $DEFAULT_NPM_VERSION for ARCHITECTURE $OS"
+    #         $(curl -s -o $NODE_DIR/npm.tgz http://$NODE_HOST/dist/npm/npm-$DEFAULT_NPM_VERSION.tgz)
+    #         $(mkdir -p $NODE_DIR/node_modules)
+    #         $(tar -z -x -f $NODE_DIR/npm.tgz -C $NODE_DIR/node_modules)
+    #         $(rm $NODE_DIR/npm.tgz)
+    #     else
+    #         echo "Downloading Node $NODE_VERSION for ARCHITECTURE $OS"
+    #         $(curl -s -o $NODE_DIR/node.zip https://$NODE_HOST$NODE_DOWNLOAD_PATH)
+    #         $(tar -z -x -f $NODE_DIR/node.zip -C $NODE_DIR)
+    #         $(rm $NODE_DIR/node.zip)

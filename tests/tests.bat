@@ -11,7 +11,9 @@ set GULP=..\..\gulp.bat
 ::
 
 :: Node 0.10.x with a gulpfile
-call :run_test "node_0.10.x" "Starting 'help'"
+set TEST=node_0.10.x
+set EXP=Starting 'help'
+call :run_test %TEST% %EXP%
 goto :eof
 
 

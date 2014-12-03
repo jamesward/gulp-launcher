@@ -30,10 +30,11 @@ goto :eof
   set CLEANUP=%4
 
   echo Running the gulp launcher in %DIR%
+  echo IN: %IN%
 
   :: start fresh
-  rmdir /s /q %APPDATA%\gulp-launcher
-  rmdir /s /q %DIR%\node_modules
+  rmdir /s /q %APPDATA%\gulp-launcher >nul 2>&1
+  rmdir /s /q %DIR%\node_modules >nul 2>&1
 
   cd %DIR%
 
@@ -41,7 +42,7 @@ goto :eof
     for /f "delims=" %%a in ('%GULP%') do set OUTPUT=%%a
     exit /b
   ) else (
-    for /f "delims=" %%a in ('echo %IN% | %GULP%') do set OUTPUT=%%a
+    for /f "delims=" %%a in ('%GULP% < %IN%') do set OUTPUT=%%a
     exit /b
   )
 

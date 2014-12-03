@@ -1,12 +1,12 @@
 # gulp-laucher for windows: run build.bat to turn into a standalone .exe file
-import urllib2, os, platform, json
+import urllib2, os, sys, platform, json
 
 ARCHITECTURE = platform.architecture()[0] # 64bit or 32bit
 
-def testclean(fname):
-    if os.path.exists(fname): os.remove(fname) 
-testclean("package.json")
-testclean("gulpfile.js")
+#def testclean(fname):
+#    if os.path.exists(fname): os.remove(fname) 
+#testclean("package.json")
+#testclean("gulpfile.js")
 
 LAUNCHER_VERSION = "0.0.1"
 BASE_LOCAL_DIR = "{HOME}\\gulp-launcher".format(HOME=os.getenv("APPDATA"))
@@ -56,3 +56,26 @@ def get_raw_node_version():
 
 print get_raw_node_version()
  
+def get_node_version():
+    if "$NODE_VERSION" in globals(): return
+    if get_raw_node_version() == "null":
+        print("The Node version was not specified.")
+        use_latest = raw_input("Should the latest be used? [yes] ")
+        if use_latest == "" or use_latest.startswith('y') or use_latest.startswith('Y'):
+            readonly NODE_VERSION=$(curl -s https://semver.io/node/stable)
+    else:
+        # does the raw version need to be resolved because it contains: ^ x ~ < >
+        if [ "${NODE_RAW_VERSION#*x}" != "$NODE_RAW_VERSION" ] ||
+           [ "${NODE_RAW_VERSION#*~}" != "$NODE_RAW_VERSION" ] ||
+           [ "${NODE_RAW_VERSION#*>}" != "$NODE_RAW_VERSION" ] ||
+           [ "${NODE_RAW_VERSION#*<}" != "$NODE_RAW_VERSION" ] ||
+           [ "${NODE_RAW_VERSION#*^}" != "$NODE_RAW_VERSION" ]:
+              readonly NODE_VERSION=$(curl -m 10 -s https://semver.io/node/resolve/$NODE_RAW_VERSION)
+        else:
+           readonly NODE_VERSION=$NODE_RAW_VERSION
+
+    if [ -z $NODE_VERSION ]:
+        print("Exiting because the Node version could not be determined.")
+        print("Set a specific node version in the package.json file.")
+        sys.exit()
+

@@ -1,2 +1,4 @@
-@REM A Gulp Launcher for *nix and Cygwin
+@echo OFF
+@rem Gulp Launcher for Windows
+
 

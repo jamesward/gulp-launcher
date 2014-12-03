@@ -1,5 +1,5 @@
 # gulp-laucher for windows: run build.bat to turn into a standalone .exe file
-import urllib2, os, platform
+import urllib2, os, platform, json
 
 ARCHITECTURE = platform.architecture()[0] # 64bit or 32bit
 
@@ -50,3 +50,9 @@ def ensure_file_exists(filename, newfile):
 ensure_file_exists("package.json", package_json)
 ensure_file_exists("gulpfile.js", gulpfile_js)
 
+def get_raw_node_version():
+    package = json.load(file("package.json"))
+    return package['engines']['node']
+
+print get_raw_node_version()
+ 

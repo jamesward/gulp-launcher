@@ -9,15 +9,19 @@ readonly GULP=../../gulp
 #
 # Usage:
 #
-#  run_test base_dir expected_output [stdin] [cleanup]
+#  run_test base_dir expected_output [stdin] [cleanup] [args]
 #
 run_test() {
   local DIR=$1
   local EXPECTED=$2
   local IN=$3
   local CLEANUP=$4
+  local ARGS=$5
 
-  printf "Running the gulp launcher in $DIR\n\n"
+  printf "Running the gulp launcher in $DIR\n"
+  printf "STDIN: $IN\n"
+  printf "CLEANUP: $CLEANUP\n"
+  printf "ARGS: $ARGS\n\n"
 
   # start fresh
   local OUTPUT=$(rm -rf ~/.gulp-launcher)
@@ -26,9 +30,9 @@ run_test() {
   cd $DIR
 
   if [ "$IN" == "" ]; then
-    readonly OUTPUT=$(../../gulp)
+    readonly OUTPUT=$($GULP $ARGS)
   else
-    readonly OUTPUT=$(echo $IN | ../../gulp)
+    readonly OUTPUT=$(echo $IN | $GULP $ARGS)
   fi
 
   cd ..
@@ -37,14 +41,13 @@ run_test() {
     $CLEANUP
   fi
 
+  printf "Output:\n$OUTPUT\n\n"
+  printf "Expected:\n$EXPECTED\n\n"
+
   if [ "${OUTPUT#*$EXPECTED}" != "$OUTPUT" ]; then
     printf "Test passed!\n\n"
-    printf "Output:\n$OUTPUT\n\n"
-    printf "Expected:\n$EXPECTED\n\n"
   else
     printf "Test failed!\n\n"
-    printf "Output:\n$OUTPUT\n\n"
-    printf "Expected:\n$EXPECTED\n\n"
     exit 1
   fi
 }
@@ -80,3 +83,6 @@ run_test "node_carret0.10.33" "Starting 'help'"
 
 # Node 0.10.33
 run_test "node_0.10.33" "Starting 'help'"
+
+# Node 0.10.33 with a specified task
+run_test "node_0.10.33" "Task 'asdf' is not in your gulpfile" "" "" "asdf"

@@ -290,7 +290,7 @@ function run_gulp() {
   download_node
   download_gulp
 
-  $NODE_BIN $GULP_BIN
+  $NODE_BIN $GULP_BIN $*
 }
 
 
@@ -316,6 +316,7 @@ if [ ! -e package.json ]; then
   }
 }
 EOF
+    echo
   else
     echo "No package.json found. Exiting."
     exit 1
@@ -334,10 +335,11 @@ gulp.task('default', function() {
   // place code for your default task here
 });
 EOF
+    echo
   else
     echo "No gulpfile.js found. Exiting."
     exit 1
   fi
 fi
 
-run_gulp
+run_gulp $*

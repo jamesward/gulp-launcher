@@ -1,2 +1,4 @@
+python -c "import urllib2; get_pip = urllib2.urlopen('https://bootstrap.pypa.io/get-pip.py').read(); file('get_pip.py', 'w').write(get_pip)"
+python get_pip.py
 pip install -r requirements.txt
 pyinstaller --onefile gulp-launcher.py

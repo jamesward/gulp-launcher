@@ -4,6 +4,6 @@ test_script:
   - tests\tests.bat
   - bash ./tests/tests.sh
 before_build:
-  - cinst pip
+  - cinst python
 build_script:
   - windows\build.bat

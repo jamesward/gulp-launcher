@@ -13,6 +13,7 @@ set GULP=..\..\gulp.bat
 ::
 :run_test
 setlocal EnableDelayedExpansion
+echo DIR = %1
 set DIR=%1
 set EXPECTED=%2
 set IN=%3
@@ -21,8 +22,8 @@ set CLEANUP=%4
 echo Running the gulp launcher in %DIR%
 
 :: start fresh
-rm %APPDATA%\Roaming\gulp-launcher
-rm %DIR%\node_modules
+rmdir /s /q %APPDATA%\Roaming\gulp-launcher
+rmdir /s /q %DIR%\node_modules
 
 cd %DIR%
 

@@ -4,7 +4,7 @@
 set BASEDIR=%~dp0
 cd /d %BASEDIR%
 
-set GULP=..\..\gulp.bat
+set GULP=..\..\windows\dist\gulp-launcher.exe
 
 ::
 :: Tests

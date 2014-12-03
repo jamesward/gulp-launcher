@@ -1,6 +1,9 @@
-install:
+before_test:
   - cinst Cygwin
 test_script:
   - tests\tests.bat
   - bash ./tests/tests.sh
-build: off
+before_build:
+  - cinst pip
+build_script:
+  - windows\build.bat

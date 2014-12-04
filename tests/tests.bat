@@ -1,10 +1,10 @@
 :: Test the Windows Gulp Launcher
-::@echo OFF
+@echo OFF
 
 set BASEDIR=%~dp0
 cd /d %BASEDIR%
 
-set GULP=..\..\windows\dist\gulp-launcher.exe
+set "GULP=..\..\windows\dist\gulp-launcher.exe"
 
 ::
 :: Tests
@@ -14,7 +14,9 @@ set GULP=..\..\windows\dist\gulp-launcher.exe
 set "TEST=node_0.10.x"
 set "EXP=Starting 'help'"
 call :run_test "%TEST%" "%EXP%"
-goto :eof
+
+
+goto End
 
 
 :: Runs a test
@@ -38,40 +40,44 @@ goto :eof
 
   cd %DIR%
 
-  if not defined IN (
-    echo running gulp-launcher.exe
-    for /f "delims=" %%a in ('%GULP%') do set OUTPUT=%%a
-    exit /b
-  ) else (
-    echo running gulp-launcher.exe with stdin = %IN%
-    for /f "delims=" %%a in ('%GULP% ^< %IN%') do set OUTPUT=%%a
-    exit /b
-  )
-
-  if defined CLEANUP (
-    %CLEANUP%
-    exit /b
-  )
-
-  cd ..
-
-  echo Output:
-  echo.
-  echo %OUTPUT%
-  echo.
-
   echo Expected:
   echo.
   echo %EXPECTED%
   echo.
 
-  if /i not "!OUTPUT:%EXPECTED%=!" == "%OUTPUT%" (
-    echo Test passed!
-    exit /b
+  echo OUTPUT:
+  echo.
+
+  set FAILED=true
+
+  if not defined IN (
+    set "GULP_CMD=%GULP%"
   ) else (
+    set "GULP_CMD=%GULP% ^< %IN%"
+  )
+
+  echo Running: %GULP_CMD%
+
+  for /f "delims=" %%a in ('%GULP_CMD% ^| FIND "%EXPECTED%"') do (
+    set FAILED=false
+  )
+
+  echo.
+
+  if defined CLEANUP (
+    call %CLEANUP%
+  )
+
+  cd ..
+
+  if %FAILED% == true (
     echo Test failed!
-    exit
+    exit /b 1
+  ) else (
+    echo Test passed!
   )
 
   exit /b
 :: end of run_test
+
+:End

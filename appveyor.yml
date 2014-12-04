@@ -6,4 +6,4 @@ test_script:
 before_build:
   - cinst PyWin32
 build_script:
-  - cd windows; build.bat; cd ..
+  - cd windows & build.bat & cd ..

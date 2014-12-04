@@ -259,6 +259,8 @@ download_gulp() {
 
     download_node
 
+    $NPM_BIN config set spin=false
+
     if [ "$GULP_RAW_VERSION" == "null" ]; then
       echo "No Gulp dependency was found in your package.json file"
       read -t 10 -p "Should the latest be used? [yes] " USE_LATEST

@@ -74,7 +74,9 @@ ensure_file_exists("gulpfile.js", gulpfile_js)
 
 def get_raw_node_version():
     package = json.load(file("package.json"))
-    if package.has_key('engines') and package.has_key('node'):
+    if args.trace:
+        pprint.pprint(package)
+    if package.has_key('engines') and package['engines'].has_key('node'):
         return package['engines']['node']
     return None
 

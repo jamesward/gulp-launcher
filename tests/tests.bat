@@ -139,17 +139,17 @@ goto End
 
   echo Running: %GULP_CMD%
 
-  :: for /f "delims=" %%a in ('%GULP_CMD%') do (
-  ::   echo %%a
-  ::   call :testformatch "%%a" "%EXPECTED%"
-  ::   if errorlevel 1 (
-  ::     set FAILED=false
-  ::   )
-  :: )
-  
-  for /f "delims=" %%a in ('%GULP_CMD% ^| FIND "%EXPECTED%"') do (
-    set FAILED=false
+  for /f "delims=" %%a in ('%GULP_CMD%') do (
+    echo %%a
+    call :testformatch "%%a" "%EXPECTED%"
+    if errorlevel 1 (
+      set FAILED=false
+    )
   )
+  
+::  for /f "delims=" %%a in ('%GULP_CMD% ^| FIND "%EXPECTED%"') do (
+::    set FAILED=false
+::  )
 
   echo.
 

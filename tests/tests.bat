@@ -139,6 +139,14 @@ goto End
 
   echo Running: %GULP_CMD%
 
+  :: for /f "delims=" %%a in ('%GULP_CMD%') do (
+  ::   echo %%a
+  ::   call :testformatch "%%a" "%EXPECTED%"
+  ::   if errorlevel 1 (
+  ::     set FAILED=false
+  ::   )
+  :: )
+  
   for /f "delims=" %%a in ('%GULP_CMD% ^| FIND "%EXPECTED%"') do (
     set FAILED=false
   )
@@ -160,5 +168,10 @@ goto End
 
   exit /b
 :: end of run_test
+
+:testformatch
+  echo %~1| find %~2 >nul
+  exit /b
+:: end of testformatch
 
 :End

@@ -11,8 +11,8 @@ set GULP=..\..\windows\dist\gulp-launcher.exe
 ::
 
 :: Node 0.10.x with a gulpfile
-set TEST=node_0.10.x
-set EXP=Starting 'help'
+set "TEST=node_0.10.x"
+set "EXP=Starting 'help'"
 call :run_test %TEST% %EXP%
 goto :eof
 
@@ -39,10 +39,10 @@ goto :eof
   cd %DIR%
 
   if not defined %IN% (
-    for /f "delims=" %%a in ('%GULP%') do set OUTPUT=%%a
+    for /f "delims=" %%a in ('..\..\windows\dist\gulp-launcher.exe') do set OUTPUT=%%a
     exit /b
   ) else (
-    for /f "delims=" %%a in ('%GULP% < %IN%') do set OUTPUT=%%a
+    for /f "delims=" %%a in ('..\..\windows\dist\gulp-launcher.exe ^< %IN%') do set OUTPUT=%%a
     exit /b
   )
 

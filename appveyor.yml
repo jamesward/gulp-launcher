@@ -7,3 +7,6 @@ before_build:
   - cinst PyWin32
 build_script:
   - cd windows & build.bat & cd ..
+platform:
+  - x86
+  - x64

@@ -2,6 +2,7 @@
 import urllib2, os, sys, platform, json
 
 ARCHITECTURE = platform.architecture()[0] # 64bit or 32bit
+DEFAULT_NPM_VERSION = "1.4.12"
 
 #def testclean(fname):
 #    if os.path.exists(fname): os.remove(fname)
@@ -27,7 +28,7 @@ package_json = """\
 }}
 """.format(
 DEFAULT_NODE_VERSION = "0.10.33",
-DEFAULT_NPM_VERSION = "1.4.12",
+DEFAULT_NPM_VERSION = DEFAULT_NPM_VERSION,
 DEFAULT_GULP_VERSION = "3.8.10")
 
 gulpfile_js = """\
@@ -85,40 +86,44 @@ def get_node_version():
 
     return NODE_VERSION
 
-print get_node_version()
 
 def download_node():
-
-    get_system_info()
-    get_node_version()
-
+    NODE_VERSION = get_node_version()
     # download Node binary
-    NODE_DIR= BASE_LOCAL_DIR + "/tools/node-" + NODE_VERSION
+    NODE_DIR = BASE_LOCAL_DIR + "\\tools\\node-" + NODE_VERSION
 
     if platform.system() == "Windows":
-        NODE_BIN = NODE_DIR + "/node.exe"
-        NPM_BIN="$NODE_BIN $NODE_DIR/node_modules/npm/cli.js"
+        NODE_BIN = NODE_DIR + "\\node.exe"
+        NPM_BIN="{NODE_BIN} {NODE_DIR}\\node_modules\\npm\\cli.js".format(NODE_BIN=NODE_BIN, NODE_DIR=NODE_DIR)
         if ARCHITECTURE == "32bit":
-            NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/x64/node.exe"
+            NODE_DOWNLOAD_PATH = "/dist/v{NODE_VERSION}/x32/node.exe".format(NODE_VERSION=NODE_VERSION)
         if ARCHITECTURE == "64bit":
-            NODE_DOWNLOAD_PATH="/dist/v${NODE_VERSION}/x64/node.exe"
+            NODE_DOWNLOAD_PATH = "/dist/v{NODE_VERSION}/x64/node.exe".format(NODE_VERSION=NODE_VERSION)
 
-    # if [[ ! -e $NODE_DIR ]]:
-    #     NODE_HOST="nodejs.org"
+    print "NODE_VERSION", NODE_VERSION
+    print "NODE_DIR", NODE_DIR
+    print "NODE_BIN", NODE_BIN
+    print "NODE_DOWNLOAD_PATH", NODE_DOWNLOAD_PATH
 
-    #     $(mkdir -p $NODE_DIR)
+    if not os.path.exists(NODE_BIN):
+        if not os.path.exists(NODE_DIR):
+            os.makedirs(NODE_DIR)
+        NODE_HOST="nodejs.org"
 
-    #     if [ $OS == $OS_CYGWIN ]:
-    #         echo "Downloading Node $NODE_VERSION for ARCHITECTURE $OS"
-    #         $(curl -s -o $NODE_BIN https://$NODE_HOST$NODE_DOWNLOAD_PATH)
+        if platform.system() == "Windows":
+            print("Downloading Node {NODE_VERSION} for {ARCHITECTURE} {OS}".format(
+                NODE_VERSION=NODE_VERSION, ARCHITECTURE=ARCHITECTURE, OS=platform.system()))
+            #$(curl -s -o $NODE_BIN https://$NODE_HOST$NODE_DOWNLOAD_PATH)
+            url = "https://{NODE_HOST}{NODE_DOWNLOAD_PATH}".format(
+                    NODE_HOST=NODE_HOST, NODE_DOWNLOAD_PATH=NODE_DOWNLOAD_PATH)
+            print url
+            file(NODE_BIN, 'wb').write(urllib2.urlopen(url).read())
 
-    #         echo "Downloading npm $DEFAULT_NPM_VERSION for ARCHITECTURE $OS"
-    #         $(curl -s -o $NODE_DIR/npm.tgz http://$NODE_HOST/dist/npm/npm-$DEFAULT_NPM_VERSION.tgz)
-    #         $(mkdir -p $NODE_DIR/node_modules)
-    #         $(tar -z -x -f $NODE_DIR/npm.tgz -C $NODE_DIR/node_modules)
-    #         $(rm $NODE_DIR/npm.tgz)
-    #     else
-    #         echo "Downloading Node $NODE_VERSION for ARCHITECTURE $OS"
-    #         $(curl -s -o $NODE_DIR/node.zip https://$NODE_HOST$NODE_DOWNLOAD_PATH)
-    #         $(tar -z -x -f $NODE_DIR/node.zip -C $NODE_DIR)
-    #         $(rm $NODE_DIR/node.zip)
+            print("Downloading npm {DEFAULT_NPM_VERSION} for {ARCHITECTURE} {OS}".format(
+                DEFAULT_NPM_VERSION=DEFAULT_NPM_VERSION, ARCHITECTURE=ARCHITECTURE, OS=platform.system()))
+            # $(curl -s -o $NODE_DIR/npm.tgz http://$NODE_HOST/dist/npm/npm-$DEFAULT_NPM_VERSION.tgz)
+            # $(mkdir -p $NODE_DIR/node_modules)
+            # $(tar -z -x -f $NODE_DIR/npm.tgz -C $NODE_DIR/node_modules)
+            # $(rm $NODE_DIR/npm.tgz)
+
+download_node()

@@ -16,12 +16,14 @@ cf = dict( # Configuration dictionary
     LAUNCHER_VERSION = "0.0.1",
     BASE_LOCAL_DIR = "{HOME}\\gulp-launcher".format(HOME=os.getenv("APPDATA")),
     GULP_RAW_VERSION = None,
-    GULP_BIN = "node_modules/gulp/bin/gulp.js",
+    GULP_BIN = os.path.normpath("node_modules/gulp/bin/gulp.js"),
 )
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(description='Auto-install & run gulp',
+    epilog = "Open source at https://github.com/jamesward/gulp-launcher/")
 parser.add_argument("-c", "--clean", action='store_true', help="Remove all artifacts and exit")
 parser.add_argument("-t", "--trace", action='store_true', help="Display trace information")
+parser.add_argument("-g", "--gulp", nargs='*', help="Run gulp with the following arguments")
 args = parser.parse_args()
 
 package_json = """\
@@ -63,11 +65,17 @@ def ensure_file_exists(filename, newfile):
 if args.clean:
     print "Cleaning up artifacts ...",
     def removeFile(fname):
-        if os.path.exists(fname): os.remove(fname)
+        if os.path.exists(fname):
+            print("removing %s" % fname)
+            os.remove(fname)
+    def removeDir(dirname):
+        if os.path.exists(dirname):
+            print("removing %s" % dirname)
+            shutil.rmtree(dirname, ignore_errors = True)
     removeFile("package.json")
     removeFile("gulpfile.js")
-    if os.path.exists(cf["BASE_LOCAL_DIR"]):
-        shutil.rmtree(cf["BASE_LOCAL_DIR"], ignore_errors = True)
+    removeDir(cf["BASE_LOCAL_DIR"])
+    removeDir("node_modules") # Off current working directory
     print "done"
     sys.exit()
 
@@ -132,7 +140,6 @@ def download_node_binary():
 
         if platform.system() == "Windows":
             print("Downloading Node {NODE_VERSION} for {ARCHITECTURE} {OS}".format(**cf))
-            #$(curl -s -o $NODE_BIN https://$NODE_HOST$NODE_DOWNLOAD_PATH)
             url = "https://{NODE_HOST}{NODE_DOWNLOAD_PATH}".format(**cf)
             if args.trace:
                 print url
@@ -161,12 +168,28 @@ def install_gulp():
         if not cf['GULP_RAW_VERSION']:
             print("No Gulp dependency was found in your package.json file")
             if answer_is_yes("Should the latest be used?"):
-                os.system("{NODE_BIN} {NPM_BIN} install --save-dev gulp".format(**cf))
+                cmd = "{NODE_BIN} {NPM_BIN} install --save-dev gulp".format(**cf)
+                if args.trace:
+                    print "cmd: " + cmd
+                os.system(cmd)
         else:
-            os.system("{NODE_BIN} {NPM_BIN} install".format(**cf))
+            cmd = "{NODE_BIN} {NPM_BIN} install".format(**cf)
+            if args.trace:
+                print "cmd: " + cmd
+            os.system(cmd)
 
         if not os.path.exists(cf['GULP_BIN']):
             print("Gulp could not be downloaded. Aborting.")
             sys.exit(1)
 
-install_gulp()
+def run_gulp():
+    install_gulp()
+    if args.gulp is not None:
+        print("executing gulp")
+        cf['gulpargs'] = " ".join(vars(args)['gulp']).strip()
+        cmd = "{NODE_BIN} {GULP_BIN} {gulpargs}".format(**cf)
+        if args.trace:
+            print "cmd: " + cmd
+        os.system(cmd)
+
+run_gulp()

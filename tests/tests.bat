@@ -38,10 +38,14 @@ goto :eof
 
   cd %DIR%
 
+  echo ready to run
+
   if not defined %IN% (
+    echo running gulp-launcher.exe
     for /f "delims=" %%a in ('..\..\windows\dist\gulp-launcher.exe') do set OUTPUT=%%a
     exit /b
   ) else (
+    echo running gulp-launcher.exe with stdin = %IN%
     for /f "delims=" %%a in ('..\..\windows\dist\gulp-launcher.exe ^< %IN%') do set OUTPUT=%%a
     exit /b
   )

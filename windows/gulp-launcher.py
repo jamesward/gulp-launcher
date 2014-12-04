@@ -15,6 +15,8 @@ cf = dict( # Configuration dictionary
     ARCHITECTURE = platform.architecture()[0], # 64bit or 32bit
     LAUNCHER_VERSION = "0.0.1",
     BASE_LOCAL_DIR = "{HOME}\\gulp-launcher".format(HOME=os.getenv("APPDATA")),
+    GULP_RAW_VERSION = None,
+    GULP_BIN = "node_modules/gulp/bin/gulp.js",
 )
 
 parser = argparse.ArgumentParser()
@@ -148,4 +150,23 @@ def download_node_binary():
             file(cf["NODE_DIR"] + "\\npm.tgz", 'wb').write(urllib2.urlopen(url).read())
             tarfile.open(cf["NODE_DIR"] + "\\npm.tgz", "r:gz").extractall(os.path.join(cf["NODE_DIR"], "node_modules"))
 
-download_node_binary()
+
+def install_gulp():
+    download_node_binary()
+    if not os.path.exists(cf['GULP_BIN']):
+        print("Installing gulp")
+        package = json.load(file("package.json"))
+        if package.has_key('devDependencies') and package['devDependencies'].has_key('gulp'):
+            cf['GULP_RAW_VERSION'] = package['devDependencies']['gulp']
+        if not cf['GULP_RAW_VERSION']:
+            print("No Gulp dependency was found in your package.json file")
+            if answer_is_yes("Should the latest be used?"):
+                os.system("{NODE_BIN} {NPM_BIN} install --save-dev gulp".format(**cf))
+        else:
+            os.system("{NODE_BIN} {NPM_BIN} install".format(**cf))
+
+        if not os.path.exists(cf['GULP_BIN']):
+            print("Gulp could not be downloaded. Aborting.")
+            sys.exit(1)
+
+install_gulp()

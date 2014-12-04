@@ -40,7 +40,7 @@ goto :eof
 
   echo ready to run
 
-  if not defined %IN% (
+  if not defined IN (
     echo running gulp-launcher.exe
     for /f "delims=" %%a in ('..\..\windows\dist\gulp-launcher.exe') do set OUTPUT=%%a
     exit /b
@@ -50,7 +50,7 @@ goto :eof
     exit /b
   )
 
-  if defined %CLEANUP% (
+  if defined CLEANUP (
     %CLEANUP%
     exit /b
   )

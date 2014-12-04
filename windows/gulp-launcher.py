@@ -104,11 +104,11 @@ def download_node():
     print "NODE_DIR", NODE_DIR
     print "NODE_BIN", NODE_BIN
     print "NODE_DOWNLOAD_PATH", NODE_DOWNLOAD_PATH
+    NODE_HOST="nodejs.org"
 
     if not os.path.exists(NODE_BIN):
         if not os.path.exists(NODE_DIR):
             os.makedirs(NODE_DIR)
-        NODE_HOST="nodejs.org"
 
         if platform.system() == "Windows":
             print("Downloading Node {NODE_VERSION} for {ARCHITECTURE} {OS}".format(
@@ -119,8 +119,18 @@ def download_node():
             print url
             file(NODE_BIN, 'wb').write(urllib2.urlopen(url).read())
 
+    print "NPM_BIN: ''" + NPM_BIN + "''"
+    if not os.path.exists(NPM_BIN):
+        if not os.path.exists(NODE_DIR):
+            os.makedirs(NODE_DIR)
+
+        if platform.system() == "Windows":
             print("Downloading npm {DEFAULT_NPM_VERSION} for {ARCHITECTURE} {OS}".format(
                 DEFAULT_NPM_VERSION=DEFAULT_NPM_VERSION, ARCHITECTURE=ARCHITECTURE, OS=platform.system()))
+            url = "http://{NODE_HOST}/dist/npm/npm-{DEFAULT_NPM_VERSION}.tgz".format(
+                      NODE_HOST=NODE_HOST, DEFAULT_NPM_VERSION=DEFAULT_NPM_VERSION)
+            print url
+            file(NODE_DIR + "\\npm.tgz", 'wb').write(urllib2.urlopen(url).read())
             # $(curl -s -o $NODE_DIR/npm.tgz http://$NODE_HOST/dist/npm/npm-$DEFAULT_NPM_VERSION.tgz)
             # $(mkdir -p $NODE_DIR/node_modules)
             # $(tar -z -x -f $NODE_DIR/npm.tgz -C $NODE_DIR/node_modules)

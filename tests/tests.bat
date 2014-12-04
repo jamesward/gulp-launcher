@@ -130,7 +130,7 @@ goto End
   if not defined IN (
     set "GULP_CMD=%GULP% %ARGS%"
   ) else (
-    set "GULP_CMD=%IN% ^| %GULP% %ARGS%"
+    set "GULP_CMD=echo %IN% ^| %GULP% %ARGS%"
   )
 
   echo Running: %GULP_CMD%
@@ -166,7 +166,7 @@ goto End
 :: end of run_test
 
 :testformatch
-  echo %~1| find %~2 >nul
+  echo %~1 | find %~2 >nul
   exit /b
 :: end of testformatch
 

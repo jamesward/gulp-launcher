@@ -2,3 +2,4 @@ node_modules/
 *.swp
 .DS_Store
 windows/get_pip.py
+windows/gulp.spec

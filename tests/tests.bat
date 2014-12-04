@@ -13,7 +13,7 @@ set GULP=..\..\windows\dist\gulp-launcher.exe
 :: Node 0.10.x with a gulpfile
 set "TEST=node_0.10.x"
 set "EXP=Starting 'help'"
-call :run_test %TEST% %EXP%
+call :run_test "%TEST%" "%EXP%"
 goto :eof
 
 
@@ -24,10 +24,10 @@ goto :eof
 ::
 :run_test
   setlocal EnableDelayedExpansion
-  set DIR=%1
-  set EXPECTED=%2
-  set IN=%3
-  set CLEANUP=%4
+  set "DIR=%~1"
+  set "EXPECTED=%~2"
+  set "IN=%~3"
+  set "CLEANUP=%~4"
 
   echo Running the gulp launcher in %DIR%
   echo IN: %IN%

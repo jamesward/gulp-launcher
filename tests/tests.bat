@@ -4,7 +4,7 @@
 set BASEDIR=%~dp0
 cd /d %BASEDIR%
 
-set "GULP=..\..\windows\dist\gulp-launcher.exe"
+set "GULP=..\..\windows\dist\gulp.exe"
 
 ::
 :: Tests
@@ -134,7 +134,7 @@ goto End
   if not defined IN (
     set "GULP_CMD=%GULP% %ARGS%"
   ) else (
-    set "GULP_CMD=%GULP% %ARGS% ^< %IN%"
+    set "GULP_CMD=%IN% ^| %GULP% %ARGS%"
   )
 
   echo Running: %GULP_CMD%

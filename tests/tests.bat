@@ -115,10 +115,6 @@ goto End
   echo Running the gulp launcher in %DIR%
   echo IN: %IN%
 
-  :: start fresh
-  rmdir /s /q %APPDATA%\gulp-launcher >nul 2>&1
-  rmdir /s /q %DIR%\node_modules >nul 2>&1
-
   cd %DIR%
 
   echo Expected:

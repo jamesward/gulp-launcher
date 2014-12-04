@@ -1,8 +1,10 @@
 # gulp-laucher for windows: run build.bat to turn into a standalone .exe file
 # before changing to config dictionary
-import urllib2, os, sys, shutil, platform, json, argparse, tarfile, pprint
+import urllib2, os, sys, shutil, platform, json, tarfile, pprint
 
 cf = dict( # Configuration dictionary
+    CLEANUP = os.getenv("GULP_LAUNCHER_CLEANUP"),
+    TRACE = os.getenv("GULP_LAUNCHER_TRACE"),
     NODE_VERSION = None,
     NODE_BIN = None,
     NPM_BIN = None,
@@ -13,18 +15,13 @@ cf = dict( # Configuration dictionary
     DEFAULT_GULP_VERSION = "3.8.10",
     OS = platform.system(),
     ARCHITECTURE = platform.architecture()[0], # 64bit or 32bit
-    LAUNCHER_VERSION = "0.0.1",
-    BASE_LOCAL_DIR = "{HOME}\\gulp-launcher".format(HOME=os.getenv("APPDATA")),
+    BASE_LOCAL_DIR = "{APPDATA}\\gulp-launcher".format(APPDATA=os.getenv("APPDATA")),
     GULP_RAW_VERSION = None,
     GULP_BIN = os.path.normpath("node_modules/gulp/bin/gulp.js"),
 )
 
-parser = argparse.ArgumentParser(description='Auto-install & run gulp',
-    epilog = "Open source at https://github.com/jamesward/gulp-launcher/")
-parser.add_argument("-c", "--clean", action='store_true', help="Remove all artifacts and exit")
-parser.add_argument("-t", "--trace", action='store_true', help="Display trace information")
-parser.add_argument("-g", "--gulp", nargs='*', help="Run gulp with the following arguments")
-args = parser.parse_args()
+if cf["TRACE"]:
+    pprint.pprint(cf)
 
 package_json = """\
 {{
@@ -60,9 +57,10 @@ def ensure_file_exists(filename, newfile):
             file(filename, 'w').write(newfile)
         else:
             print("No " + filename + " found. Aborting.")
+            sys.exit(1)
 
 # Clean up all effects of running this program:
-if args.clean:
+if cf["CLEANUP"]:
     print "Cleaning up artifacts ...",
     def removeFile(fname):
         if os.path.exists(fname):
@@ -72,26 +70,20 @@ if args.clean:
         if os.path.exists(dirname):
             print("removing %s" % dirname)
             shutil.rmtree(dirname, ignore_errors = True)
-    removeFile("package.json")
-    removeFile("gulpfile.js")
     removeDir(cf["BASE_LOCAL_DIR"])
     removeDir("node_modules") # Off current working directory
-    print "done"
-    sys.exit()
+    print "Done"
 
 ensure_file_exists("package.json", package_json)
 ensure_file_exists("gulpfile.js", gulpfile_js)
 
 def get_raw_node_version():
     package = json.load(file("package.json"))
-    if args.trace:
+    if cf["TRACE"]:
         pprint.pprint(package)
     if package.has_key('engines') and package['engines'].has_key('node'):
         return package['engines']['node']
     return None
-
-if args.trace:
-    print get_raw_node_version()
 
 def get_node_version():
     if cf["NODE_VERSION"]:
@@ -131,9 +123,6 @@ def download_node_binary():
             # There's also https://nodejs.org/dist/v0.10.33/x64/node-v0.10.33-x64.msi
             cf["NODE_DOWNLOAD_PATH"] = "/dist/v{NODE_VERSION}/x64/node.exe".format(**cf)
 
-    if args.trace:
-        pprint.pprint(cf)
-
     if not os.path.exists(cf["NODE_BIN"]):
         if not os.path.exists(cf["NODE_DIR"]):
             os.makedirs(cf["NODE_DIR"])
@@ -141,7 +130,7 @@ def download_node_binary():
         if platform.system() == "Windows":
             print("Downloading Node {NODE_VERSION} for {ARCHITECTURE} {OS}".format(**cf))
             url = "https://{NODE_HOST}{NODE_DOWNLOAD_PATH}".format(**cf)
-            if args.trace:
+            if cf["TRACE"]:
                 print url
             file(cf["NODE_BIN"], 'wb').write(urllib2.urlopen(url).read())
 
@@ -152,7 +141,7 @@ def download_node_binary():
         if platform.system() == "Windows":
             print("Downloading npm {DEFAULT_NPM_VERSION} for {ARCHITECTURE} {OS}".format(**cf))
             url = "http://{NODE_HOST}/dist/npm/npm-{DEFAULT_NPM_VERSION}.tgz".format(**cf)
-            if args.trace:
+            if cf["TRACE"]:
                 print url
             file(cf["NODE_DIR"] + "\\npm.tgz", 'wb').write(urllib2.urlopen(url).read())
             tarfile.open(cf["NODE_DIR"] + "\\npm.tgz", "r:gz").extractall(os.path.join(cf["NODE_DIR"], "node_modules"))
@@ -169,12 +158,12 @@ def install_gulp():
             print("No Gulp dependency was found in your package.json file")
             if answer_is_yes("Should the latest be used?"):
                 cmd = "{NODE_BIN} {NPM_BIN} install --save-dev gulp".format(**cf)
-                if args.trace:
+                if cf["TRACE"]:
                     print "cmd: " + cmd
                 os.system(cmd)
         else:
             cmd = "{NODE_BIN} {NPM_BIN} install".format(**cf)
-            if args.trace:
+            if cf["TRACE"]:
                 print "cmd: " + cmd
             os.system(cmd)
 
@@ -184,12 +173,10 @@ def install_gulp():
 
 def run_gulp():
     install_gulp()
-    if args.gulp is not None:
-        print("executing gulp")
-        cf['gulpargs'] = " ".join(vars(args)['gulp']).strip()
-        cmd = "{NODE_BIN} {GULP_BIN} {gulpargs}".format(**cf)
-        if args.trace:
-            print "cmd: " + cmd
-        os.system(cmd)
+    cf['gulpargs'] = " ".join(sys.argv).strip()
+    cmd = "{NODE_BIN} {GULP_BIN} {gulpargs}".format(**cf)
+    if cf["TRACE"]:
+        print "cmd: " + cmd
+    os.system(cmd)
 
 run_gulp()

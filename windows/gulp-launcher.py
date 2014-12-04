@@ -1,4 +1,5 @@
 # gulp-laucher for windows: run build.bat to turn into a standalone .exe file
+# before changing to config dictionary
 import urllib2, os, sys, shutil, platform, json, argparse, tarfile
 
 DEFAULT_NODE_VERSION = "0.10.33"

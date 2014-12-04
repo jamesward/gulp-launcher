@@ -3,7 +3,7 @@
 BASEDIR=$(dirname $0)
 cd $BASEDIR
 
-readonly GULP=../../gulp
+readonly GULP=../../bash/gulp
 
 # Runs a test
 #

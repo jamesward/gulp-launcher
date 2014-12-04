@@ -6,7 +6,7 @@ test_script:
 before_build:
   - cinst PyWin32
 build_script:
-  - cd windows & build.bat & cd ..
+  - cd python & build.bat & cd ..
 platform:
   - x86
   - x64

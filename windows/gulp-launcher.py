@@ -1,13 +1,12 @@
 # gulp-laucher for windows: run build.bat to turn into a standalone .exe file
-import urllib2, os, sys, platform, json
+import urllib2, os, sys, shutil, platform, json, argparse, tarfile
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-c", "--clean", action='store_true', help="Remove all artifacts")
+args = parser.parse_args()
 
 ARCHITECTURE = platform.architecture()[0] # 64bit or 32bit
 DEFAULT_NPM_VERSION = "1.4.12"
-
-#def testclean(fname):
-#    if os.path.exists(fname): os.remove(fname)
-#testclean("package.json")
-#testclean("gulpfile.js")
 
 LAUNCHER_VERSION = "0.0.1"
 BASE_LOCAL_DIR = "{HOME}\\gulp-launcher".format(HOME=os.getenv("APPDATA"))
@@ -51,6 +50,16 @@ def ensure_file_exists(filename, newfile):
         else:
             print("No " + filename + " found. Aborting.")
 
+def removeFile(fname):
+    if os.path.exists(fname): os.remove(fname)
+# Clean up all effects of running this program:
+if args.clean:
+    removeFile("package.json")
+    removeFile("gulpfile.js")
+    if os.path.exists(BASE_LOCAL_DIR):
+        shutil.rmtree(BASE_LOCAL_DIR)
+
+
 ensure_file_exists("package.json", package_json)
 ensure_file_exists("gulpfile.js", gulpfile_js)
 
@@ -58,7 +67,7 @@ def get_raw_node_version():
     package = json.load(file("package.json"))
     if package.has_key('engines') and package.has_key('node'):
         return package['engines']['node']
-    return None 
+    return None
 
 print get_raw_node_version()
 
@@ -94,10 +103,12 @@ def download_node():
 
     if platform.system() == "Windows":
         NODE_BIN = NODE_DIR + "\\node.exe"
-        NPM_BIN="{NODE_BIN} {NODE_DIR}\\node_modules\\npm\\cli.js".format(NODE_BIN=NODE_BIN, NODE_DIR=NODE_DIR)
+        NPM_BIN="{NODE_DIR}\\node_modules\\npm\\cli.js".format(NODE_BIN=NODE_BIN, NODE_DIR=NODE_DIR)
         if ARCHITECTURE == "32bit":
-            NODE_DOWNLOAD_PATH = "/dist/v{NODE_VERSION}/x32/node.exe".format(NODE_VERSION=NODE_VERSION)
+            # I assume this is the right one for 32bit. There's also node-v0.10.33-x86.msi
+            NODE_DOWNLOAD_PATH = "/dist/v{NODE_VERSION}/node.exe".format(NODE_VERSION=NODE_VERSION)
         if ARCHITECTURE == "64bit":
+            # There's also https://nodejs.org/dist/v0.10.33/x64/node-v0.10.33-x64.msi
             NODE_DOWNLOAD_PATH = "/dist/v{NODE_VERSION}/x64/node.exe".format(NODE_VERSION=NODE_VERSION)
 
     print "NODE_VERSION", NODE_VERSION
@@ -119,7 +130,7 @@ def download_node():
             print url
             file(NODE_BIN, 'wb').write(urllib2.urlopen(url).read())
 
-    print "NPM_BIN: ''" + NPM_BIN + "''"
+    print "NPM_BIN: (" + NPM_BIN + ")"
     if not os.path.exists(NPM_BIN):
         if not os.path.exists(NODE_DIR):
             os.makedirs(NODE_DIR)
@@ -131,9 +142,7 @@ def download_node():
                       NODE_HOST=NODE_HOST, DEFAULT_NPM_VERSION=DEFAULT_NPM_VERSION)
             print url
             file(NODE_DIR + "\\npm.tgz", 'wb').write(urllib2.urlopen(url).read())
-            # $(curl -s -o $NODE_DIR/npm.tgz http://$NODE_HOST/dist/npm/npm-$DEFAULT_NPM_VERSION.tgz)
-            # $(mkdir -p $NODE_DIR/node_modules)
-            # $(tar -z -x -f $NODE_DIR/npm.tgz -C $NODE_DIR/node_modules)
-            # $(rm $NODE_DIR/npm.tgz)
+            tarfile.open(NODE_DIR + "\\npm.tgz", "r:gz").extractall(os.path.join(NODE_DIR, "node_modules"))
+            # $(rm $NODE_DIR/npm.tgz) # This is a small file so I'm leaving it for now
 
 download_node()

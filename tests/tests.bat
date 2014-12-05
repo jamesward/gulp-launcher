@@ -96,10 +96,10 @@ call :run_test "%TEST%" "%EXP%"
 if errorlevel 1 goto :eof
 
 :: Node 0.10.33
-set "TEST=node_0.10.33"
-set "EXP=Starting 'help'"
-call :run_test "%TEST%" "%EXP%"
-if errorlevel 1 goto :eof
+::set "TEST=node_0.10.33"
+::set "EXP=Starting 'help'"
+::call :run_test "%TEST%" "%EXP%"
+::if errorlevel 1 goto :eof
 
 :: Node 0.10.33 with a specified task
 set "TEST=node_0.10.33"

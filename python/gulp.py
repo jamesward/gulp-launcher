@@ -7,7 +7,7 @@ class Configuration(dict):
     def __setattr__(self, attr, val):
         self[attr] = val
 
-cf = Configuration( 
+cf = Configuration(
     CLEANUP = os.getenv("GULP_LAUNCHER_CLEANUP"),
     TRACE = os.getenv("GULP_LAUNCHER_TRACE"),
     NODE_VERSION = None,
@@ -108,7 +108,7 @@ def get_node_version():
         else:
             cf.NODE_VERSION = get_raw_node_version()
 
-    if cf.NODE_VERSION:
+    if not cf.NODE_VERSION:
         cf.NODE_VERSION = urllib2.urlopen("https://semver.io/node/stable").read()
 
     return cf.NODE_VERSION

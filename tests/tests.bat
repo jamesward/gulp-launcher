@@ -4,7 +4,7 @@
 set BASEDIR=%~dp0
 cd /d %BASEDIR%
 
-set "GULP=..\..\python\dist\gulp.exe"
+set "GULP=GULP_LAUNCHER_TRACE=1 & ..\..\python\dist\gulp.exe"
 
 ::
 :: Tests

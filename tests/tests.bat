@@ -14,12 +14,14 @@ set "GULP=..\..\python\dist\gulp.exe"
 set "TEST=node_0.10.x"
 set "EXP=Starting 'help'"
 call :run_test "%TEST%" "%EXP%"
+if errorlevel 1 goto :eof
 
 :: Gulp dep isn't set and we tell the gulp launcher not to add it
 set "TEST=no_gulp_dep"
 set "EXP=No Gulp dependency was found"
 set "STDIN=no"
 call :run_test "%TEST%" "%EXP%" "%STDIN%"
+if errorlevel 1 goto :eof
 
 :: Gulp dep isn't set and we tell the gulp launcher to add it
 set "TEST=no_gulp_dep"
@@ -27,12 +29,14 @@ set "EXP=Starting 'help'"
 set "STDIN=yes"
 set "CLEAN=git checkout package.json"
 call :run_test "%TEST%" "%EXP%" "%STDIN%" "%CLEAN%"
+if errorlevel 1 goto :eof
 
 :: Node engine isn't set and we tell the gulp launcher not to add it
 set "TEST=no_node"
 set "EXP=Exiting because the Node version could not be determined."
 set "STDIN=no"
 call :run_test "%TEST%" "%EXP%" "%STDIN%"
+if errorlevel 1 goto :eof
 
 :: Node engine isn't set and we tell the gulp launcher to add it
 set "TEST=no_node"
@@ -40,6 +44,7 @@ set "EXP=Starting 'help'"
 set "STDIN=yes"
 set "CLEAN=git checkout package.json"
 call :run_test "%TEST%" "%EXP%" "%STDIN%" "%CLEAN%"
+if errorlevel 1 goto :eof
 
 :: Node 0.10.x without a gulpfile and auto-add one
 set "TEST=node_0.10.x_without_gulpfile"
@@ -47,12 +52,14 @@ set "EXP=Starting 'default'"
 set "STDIN=yes"
 set "CLEAN=rm gulpfile.js"
 call :run_test "%TEST%" "%EXP%" "%STDIN%" "%CLEAN%"
+if errorlevel 1 goto :eof
 
 :: Node 0.10.x without a gulpfile but don't auto-add one
 set "TEST=node_0.10.x_without_gulpfile"
 set "EXP=No gulpfile.js found"
 set "STDIN=no"
 call :run_test "%TEST%" "%EXP%" "%STDIN%"
+if errorlevel 1 goto :eof
 
 :: Node 0.10.x without a package.json and auto-add one
 set "TEST=node_0.10.x_without_package_json"
@@ -60,32 +67,38 @@ set "EXP=Starting 'default'"
 set "STDIN=yes"
 set "CLEAN=rm package.json"
 call :run_test "%TEST%" "%EXP%" "%STDIN%" "%CLEAN%"
+if errorlevel 1 goto :eof
 
 :: Node 0.10.x without a package.json but don't auto-add one
 set "TEST=node_0.10.x_without_package_json"
 set "EXP=No package.json found"
 set "STDIN=no"
 call :run_test "%TEST%" "%EXP%" "%STDIN%"
+if errorlevel 1 goto :eof
 
 :: Node 0.10.x with a gulpfile
 set "TEST=node_0.10.x"
 set "EXP=Starting 'help'"
 call :run_test "%TEST%" "%EXP%"
+if errorlevel 1 goto :eof
 
 :: Node ~0.10.33
 set "TEST=node_tilde0.10.33"
 set "EXP=Starting 'help'"
 call :run_test "%TEST%" "%EXP%"
+if errorlevel 1 goto :eof
 
 :: Node ^0.10.33
 set "TEST=node_carret0.10.33"
 set "EXP=Starting 'help'"
 call :run_test "%TEST%" "%EXP%"
+if errorlevel 1 goto :eof
 
 :: Node 0.10.33
 set "TEST=node_0.10.33"
 set "EXP=Starting 'help'"
 call :run_test "%TEST%" "%EXP%"
+if errorlevel 1 goto :eof
 
 :: Node 0.10.33 with a specified task
 set "TEST=node_0.10.33"
@@ -94,9 +107,10 @@ set "STDIN="
 set "CLEAN="
 set "ARGS=asdf"
 call :run_test "%TEST%" "%EXP%" "%STDIN%" "%CLEAN%" "%ARGS%"
+if errorlevel 1 goto :eof
 
 
-goto End
+goto :eof
 
 
 :: Runs a test
@@ -160,12 +174,12 @@ goto End
 
   if %FAILED% == true (
     echo Test failed!
+    echo.
     exit /b 1
   ) else (
     echo Test passed!
+    echo.
   )
 
   exit /b
 :: end of run_test
-
-:End

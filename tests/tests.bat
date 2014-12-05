@@ -126,20 +126,9 @@ goto :eof
   set "CLEANUP=%~4"
   set "ARGS=%~5"
 
-  echo Running the gulp launcher in %DIR%
-  echo IN: %IN%
+  set FAILED=true
 
   cd %DIR%
-
-  echo Expected:
-  echo.
-  echo %EXPECTED%
-  echo.
-
-  echo OUTPUT:
-  echo.
-
-  set FAILED=true
 
   if not defined IN (
     set "GULP_CMD=%GULP% %ARGS%"
@@ -147,13 +136,19 @@ goto :eof
     set "GULP_CMD=echo %IN% ^| %GULP% %ARGS%"
   )
 
-  echo Running: %GULP_CMD%
+  echo Running the %GULP_CMD% in %DIR%
+  echo STDIN: %IN%
+  echo Expected: %EXPECTED%
+  echo.
+  echo OUTPUT:
   echo.
 
   :: Run it once to get the output
   for /f "delims=" %%a in ('%GULP_CMD%') do (
     echo %%a
   )
+
+  echo.
 
   if defined CLEANUP (
     call %CLEANUP%
@@ -163,8 +158,6 @@ goto :eof
   for /f "delims=" %%a in ('%GULP_CMD% ^| FIND "%EXPECTED%"') do (
     set FAILED=false
   )
-
-  echo.
 
   if defined CLEANUP (
     call %CLEANUP%

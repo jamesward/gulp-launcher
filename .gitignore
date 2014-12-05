@@ -3,3 +3,6 @@ node_modules/
 .DS_Store
 windows/get_pip.py
 windows/gulp.spec
+windows/gulpfile.js
+windows/build/
+windows/package.json

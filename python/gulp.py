@@ -1,5 +1,5 @@
 # gulp-laucher for windows: run build.bat to turn into a standalone .exe file
-import urllib2, os, sys, shutil, platform, json, tarfile, pprint
+import urllib2, os, sys, shutil, platform, json, tarfile, pprint, subprocess
 
 class Configuration(dict):
     def __getattr__(self, attr):
@@ -151,6 +151,12 @@ def download_node_binary():
             file(cf.NODE_DIR + "\\npm.tgz", 'wb').write(urllib2.urlopen(url).read())
             tarfile.open(cf.NODE_DIR + "\\npm.tgz", "r:gz").extractall(os.path.join(cf.NODE_DIR, "node_modules"))
 
+def cmdline(arglist):
+    assert(isinstance(arglist, list))
+    if cf.TRACE:
+        print "arglist: "
+        pprint.pprint(arglist)
+    subprocess.call(arglist)
 
 def install_gulp():
     download_node_binary()
@@ -162,15 +168,9 @@ def install_gulp():
         if not cf.GULP_RAW_VERSION:
             print("No Gulp dependency was found in your package.json file")
             if answer_is_yes("Should the latest be used?"):
-                cmd = "{NODE_BIN} {NPM_BIN} install --save-dev gulp".format(**cf)
-                if cf.TRACE:
-                    print "cmd: " + cmd
-                os.system(cmd)
+                cmdline(["{NODE_BIN}".format(**cf), "{NPM_BIN}".format(**cf), "install --save-dev gulp"])
         else:
-            cmd = "{NODE_BIN} {NPM_BIN} install".format(**cf)
-            if cf.TRACE:
-                print "cmd: " + cmd
-            os.system(cmd)
+            cmdline(["{NODE_BIN}".format(**cf), "{NPM_BIN}".format(**cf), "install"])
 
         if not os.path.exists(cf.GULP_BIN):
             print("Gulp could not be downloaded. Aborting.")
@@ -179,9 +179,6 @@ def install_gulp():
 def run_gulp():
     install_gulp()
     cf.gulpargs = " ".join(sys.argv[1:]).strip()
-    cmd = "{NODE_BIN} {GULP_BIN} {gulpargs}".format(**cf)
-    if cf.TRACE:
-        print "cmd: " + cmd
-    os.system(cmd)
+    cmdline(["{NODE_BIN}".format(**cf), "{GULP_BIN}".format(**cf), "{gulpargs}".format(**cf)])
 
 run_gulp()

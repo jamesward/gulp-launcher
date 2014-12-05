@@ -10,3 +10,7 @@ build_script:
 platform:
   - x86
   - x64
+before_deploy:
+  - cinst 7zip.commandline
+deploy_script:
+  - bash release.sh

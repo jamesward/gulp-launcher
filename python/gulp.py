@@ -156,7 +156,7 @@ def cmdline(arglist):
     if cf.TRACE:
         print "arglist: "
         pprint.pprint(arglist)
-    p = subprocess.Popen(arglist, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+    p = subprocess.call(arglist, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
     out, err = p.communicate()
     print(out)
     print(err)

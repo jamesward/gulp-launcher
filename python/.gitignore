@@ -1,5 +1,5 @@
 gulpfile.js
 package.json
 build/
-gulp-launcher.spec
+gulp.spec
 dist/

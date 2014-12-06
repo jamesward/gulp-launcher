@@ -156,10 +156,7 @@ def cmdline(arglist):
     if cf.TRACE:
         print "arglist: "
         pprint.pprint(arglist)
-    p = subprocess.call(arglist, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-    out, err = p.communicate()
-    print(out)
-    print(err)
+    subprocess.call(arglist)
 
 def install_gulp():
     download_node_binary()

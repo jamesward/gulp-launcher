@@ -1,6 +1,6 @@
 import subprocess, pprint, sys, os
 
-gulpcmd = os.path.normpath("../../python/dist/gulp.exe")
+gulpcmd = os.path.normpath("../python/dist/gulp.exe")
 
 def run_test(dir, exp, stdin, cleanup, args):
     args.insert(0, gulpcmd)

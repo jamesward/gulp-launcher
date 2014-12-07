@@ -168,9 +168,9 @@ def install_gulp():
         if not cf.GULP_RAW_VERSION:
             print("No Gulp dependency was found in your package.json file")
             if answer_is_yes("Should the latest be used?"):
-                cmdline(["{NODE_BIN}".format(**cf), "{NPM_BIN}".format(**cf), "install --save-dev gulp"])
+                cmdline([cf.NODE_BIN, cf.NPM_BIN, "install", "--save-dev", "gulp"])
         else:
-            cmdline(["{NODE_BIN}".format(**cf), "{NPM_BIN}".format(**cf), "install"])
+            cmdline([cf.NODE_BIN, cf.NPM_BIN, "install"])
 
         if not os.path.exists(cf.GULP_BIN):
             print("Gulp could not be downloaded. Aborting.")

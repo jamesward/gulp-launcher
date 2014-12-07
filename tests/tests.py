@@ -22,6 +22,11 @@ def run_test(dir, exp, stdin, cleanup, args):
         print
         subprocess.Popen(cleanup, shell=True, cwd=dir).communicate()
 
+    if err:
+        print "Error:"
+        print err
+        print
+
     if exp in out:
         print "Test Passed!"
         print

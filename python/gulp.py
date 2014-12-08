@@ -178,9 +178,7 @@ def install_gulp():
 
 def run_gulp():
     install_gulp()
-    cf.gulpargs = " ".join(sys.argv[1:]).strip()
-    if cf.TRACE:
-        print "gulpargs: '" + cf.gulpargs + "'"
-    cmdline(["{NODE_BIN}".format(**cf), "{GULP_BIN}".format(**cf), "{gulpargs}".format(**cf)])
+    cmd = [cf.NODE_BIN, cf,GULP_BIN].extend(sys.argv[1:])
+    cmdline(cmd)
 
 run_gulp()

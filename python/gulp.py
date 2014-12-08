@@ -157,22 +157,8 @@ def cmdline(arglist):
         print "arglist: "
         pprint.pprint(arglist)
 
-    try:
-        p = subprocess.Popen(arglist, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-        out, err = p.communicate()
+    subprocess.call(arglist)
 
-        print out
-
-        if err:
-            if cf.TRACE:
-                print "Error:"
-            print err
-
-    except (OSError, ValueError), e:
-        print >>sys.stderr, "Execution failed:", e
-
-    if cf.TRACE:
-        print "process completed"
 
 def install_gulp():
     download_node_binary()

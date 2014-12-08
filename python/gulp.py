@@ -164,10 +164,15 @@ def cmdline(arglist):
         print out
 
         if err:
+            if cf.TRACE:
+                print "Error:"
             print err
 
     except (OSError, ValueError), e:
         print >>sys.stderr, "Execution failed:", e
+
+    if cf.TRACE:
+        print "process completed"
 
 def install_gulp():
     download_node_binary()

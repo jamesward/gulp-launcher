@@ -157,14 +157,17 @@ def cmdline(arglist):
         print "arglist: "
         pprint.pprint(arglist)
 
-    p = subprocess.Popen(arglist, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-    out, err = p.communicate()
+    try:
+        p = subprocess.Popen(arglist, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+        out, err = p.communicate()
 
-    print out
+        print out
 
-    if err:
-        print err
-#        sys.exit(1)
+        if err:
+            print err
+
+    except (OSError, ValueError), e:
+        print >>sys.stderr, "Execution failed:", e
 
 def install_gulp():
     download_node_binary()

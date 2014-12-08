@@ -10,7 +10,10 @@ def run_test(dir, exp, stdin, cleanup, args):
     print "Expected: {0}".format(exp)
     print
 
-    p = subprocess.Popen(args, cwd=dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, env={"GULP_LAUNCHER_TRACE": "1"})
+    myenv = os.environ
+    myenv["GULP_LAUNCHER_TRACE"] = "1"
+
+    p = subprocess.Popen(args, cwd=dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, env=myenv)
     out, err = p.communicate(stdin)
 
     print "Output:"

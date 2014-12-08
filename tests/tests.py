@@ -1,4 +1,4 @@
-import subprocess, pprint, sys, os
+import pprint, sys, os, easyprocess
 
 gulpcmd = os.path.normpath("../python/dist/gulp.exe")
 
@@ -13,28 +13,23 @@ def run_test(dir, exp, stdin, cleanup, args):
     myenv = os.environ
     myenv["GULP_LAUNCHER_TRACE"] = "1"
 
-    try:
-        p = subprocess.Popen(args, cwd=dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, env=myenv)
-
-        out, err = p.communicate(stdin)
-    except (OSError, ValueError), e:
-        print >>sys.stderr, "Execution failed:", e
+    p = easyprocess.EasyProcess(args, cwd=dir).call()
 
     print "Output:"
-    print(out)
+    print(p.stdout)
     print
 
     if cleanup:
         print "Cleaning up: {0}".format(cleanup)
         print
-        subprocess.Popen(cleanup, shell=True, cwd=dir).communicate()
+        easyprocess.EasyProcess(cleanup, cwd=dir).call()
 
-    if err:
+    if p.stderr:
         print "Error:"
-        print err
+        print p.stderr
         print
 
-    if exp in out:
+    if exp in p.stdout:
         print "Test Passed!"
         print
     else:

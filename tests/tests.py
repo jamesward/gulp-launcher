@@ -14,7 +14,7 @@ def run_test(dir, exp, stdin, cleanup, args):
     myenv["GULP_LAUNCHER_TRACE"] = "1"
 
     try:
-        p = subprocess.Popen(args, cwd=dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, env=myenv)
+        p = subprocess.Popen(args, cwd=dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, env=myenv, shell=True)
 
         out, err = p.communicate(stdin)
     except (OSError, ValueError), e:

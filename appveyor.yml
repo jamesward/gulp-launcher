@@ -1,7 +1,7 @@
 before_test:
   - cinst Cygwin
 test_script:
-  - tests/tests.bat
+  - cd tests & python tests.py & cd ..
   - bash ./tests/tests.sh
 before_build:
   - cinst PyWin32

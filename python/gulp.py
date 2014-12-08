@@ -164,7 +164,7 @@ def cmdline(arglist):
 
     if err:
         print err
-        sys.exit(1)
+#        sys.exit(1)
 
 def install_gulp():
     download_node_binary()

@@ -178,7 +178,8 @@ def install_gulp():
 
 def run_gulp():
     install_gulp()
-    cmd = [cf.NODE_BIN, cf.GULP_BIN].extend(sys.argv[1:])
+    cmd = [cf.NODE_BIN, cf.GULP_BIN]
+    cmd.extend(sys.argv[1:])
     cmdline(cmd)
 
 run_gulp()

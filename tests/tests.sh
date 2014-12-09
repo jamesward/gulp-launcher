@@ -37,9 +37,9 @@ run_test() {
   fi
 
   if [ "$IN" == "" ]; then
-    local OUTPUT=$($GULP --no-color $ARGS)
+    local OUTPUT=$($GULP --no-color $ARGS 2>&1)
   else
-    local OUTPUT=$(echo $IN | $GULP --no-color $ARGS)
+    local OUTPUT=$(echo $IN | $GULP --no-color $ARGS 2>&1)
   fi
 
   if [ "$CLEANUP" != "" ]; then

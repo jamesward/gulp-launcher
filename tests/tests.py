@@ -1,11 +1,12 @@
 import subprocess, pprint, sys, os
 
-gulpcmd = os.path.normpath("../python/dist/gulp.exe")
+gulpcmd = os.path.normpath("../../python/dist/gulp.exe")
 
 def run_test(dir, exp, stdin, setup, cleanup, args):
     args.insert(0, gulpcmd)
+    cmd = " ".join(args)
 
-    print "Running {0} in {1}".format(" ".join(args), dir)
+    print "Running {0} in {1}".format(cmd, dir)
     print "STDIN: {0}".format(stdin)
     print "Expected: {0}".format(exp)
     print
@@ -19,9 +20,8 @@ def run_test(dir, exp, stdin, setup, cleanup, args):
         subprocess.Popen(setup, shell=True, cwd=dir).communicate()
 
     try:
-        p = subprocess.Popen(args, cwd=dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, env=myenv, shell=True)
-
-        out, err = p.communicate(stdin)
+        p = subprocess.Popen(cmd, cwd=dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, env=myenv, shell=True)
+        out, err = p.communicate(stdin + "\n")
     except (OSError, ValueError), e:
         print >>sys.stderr, "Execution failed:", e
 
@@ -47,7 +47,7 @@ def run_test(dir, exp, stdin, setup, cleanup, args):
         sys.exit(1)
 
 # Gulp dep isn't set and we tell the gulp launcher not to add it
-run_test("no_gulp_dep", "No Gulp dependency was found", "no", "rmdir node_modules /s /q", "", [])
+run_test("no_gulp_dep", "No Gulp dependency was found", "no", "rm -rf node_modules", "", [])
 # Gulp dep isn't set and we tell the gulp launcher to add it
 run_test("no_gulp_dep", "Starting 'help'", "yes", "cp package.json package.json-", "mv package.json- package.json", [])
 

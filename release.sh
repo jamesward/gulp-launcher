@@ -9,6 +9,11 @@ if [ "$APPVEYOR_REPO_TAG" == "True" ]; then
 
   unzip github-release.zip
 
+  bin/windows/amd64/github-release.exe release \
+    --user jamesward \
+    --repo gulp-launcher \
+    --tag $APPVEYOR_REPO_BRANCH
+
   bin/windows/amd64/github-release.exe upload \
     --user jamesward \
     --repo gulp-launcher \

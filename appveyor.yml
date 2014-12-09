@@ -10,7 +10,7 @@ build_script:
 before_test:
 #  - cinst Cygwin
 test_script:
-  - cd tests & python tests.py ../../python/dist/gulp.exe
+  - cd tests & python tests.py ../python/dist/gulp.exe
 #  - cd tests & python tests.py "bash ../bash/gulp" & cd ..
 
 before_deploy:

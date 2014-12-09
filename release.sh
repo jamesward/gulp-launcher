@@ -1,9 +1,6 @@
 #!/bin/bash
 
-echo "APPVEYOR_REPO_TAG = $APPVEYOR_REPO_TAG"
-echo "APPVEYOR_REPO_BRANCH = $APPVEYOR_REPO_BRANCH"
-
-if [ "$APPVEYOR_REPO_TAG" == "True" ]; then
+if [ "$APPVEYOR_REPO_TAG" == "true" ]; then
 
   echo "Shipping a release for $APPVEYOR_REPO_BRANCH"
 

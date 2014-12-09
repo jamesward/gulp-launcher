@@ -91,5 +91,16 @@ run_test "node_carret0.10.33" "Starting 'help'"
 # Node 0.10.33
 run_test "node_0.10.33" "Starting 'help'"
 
+echo "try 1: $(grep)"
+
+echo "try 2: $(grep -v)"
+
+cd node_0.10.33
+echo "try 3: $(../../python/dist/gulp.exe foo)"
+
+echo "try 4: $($GULP foo)"
+cd ..
+
+
 # Node 0.10.33 with a specified task
 run_test "node_0.10.33" "Task 'asdf' is not in your gulpfile" "" "" "" "asdf"

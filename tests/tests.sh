@@ -30,10 +30,6 @@ run_test() {
     printf "STDIN: $IN\n"
   fi
 
-  if [ "$ARGS" != "" ]; then
-    printf "ARGS: $ARGS\n\n"
-  fi
-
   cd $DIR
 
   if [ "$SETUP" != "" ]; then
@@ -43,18 +39,19 @@ run_test() {
 
   if [ "$ARGS" == "" ]; then
     if [ "$IN" == "" ]; then
-      $GULP > output.txt
+      local OUTPUT=$($GULP)
+    else
+      local OUTPUT=$(echo $IN | $GULP)
+    fi
+  else
+    printf "ARGS: $ARGS\n\n"
+    if [ "$IN" == "" ]; then
+      $GULP $ARGS > output.txt
     else
       echo $IN | $GULP $ARGS > output.txt
     fi
     local OUTPUT=$(cat output.txt)
     rm output.txt
-  else
-    if [ "$IN" == "" ]; then
-      local OUTPUT=$($GULP $ARGS)
-    else
-      local OUTPUT=$(echo $IN | $GULP $ARGS)
-    fi
   fi
 
   if [ "$CLEANUP" != "" ]; then
@@ -74,6 +71,12 @@ run_test() {
     exit 1
   fi
 }
+
+# Node 0.10.33
+run_test "node_0.10.33" "Starting 'help'"
+
+# Node 0.10.33 with a specified task
+run_test "node_0.10.33" "Task 'asdf' is not in your gulpfile" "" "" "" "asdf"
 
 # Gulp dep isn't set and we tell the gulp launcher not to add it
 run_test "no_gulp_dep" "No Gulp dependency was found" "no" "rm -r node_modules"
@@ -103,9 +106,3 @@ run_test "node_tilde0.10.33" "Starting 'help'"
 
 # Node ^0.10.33
 run_test "node_carret0.10.33" "Starting 'help'"
-
-# Node 0.10.33
-run_test "node_0.10.33" "Starting 'help'"
-
-# Node 0.10.33 with a specified task
-run_test "node_0.10.33" "Task 'asdf' is not in your gulpfile" "" "" "" "asdf"

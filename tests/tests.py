@@ -1,42 +1,60 @@
-import subprocess, pprint, sys, os
+import subprocess, sys, os, platform
 
-gulpcmd = os.path.normpath("../../python/dist/gulp.exe")
+if len(sys.argv) >= 2:
+    gulpcmd = os.path.normpath(sys.argv[1])
+else:
+    if platform.system() == "Windows":
+        gulpcmd = os.path.normpath("../../python/dist/gulp.exe")
+    else:
+        gulpcmd = os.path.normpath("../../bash/gulp")
 
 def run_test(dir, exp, stdin, setup, cleanup, args):
     args.insert(0, gulpcmd)
-    cmd = " ".join(args)
 
-    print "Running {0} in {1}".format(cmd, dir)
-    print "STDIN: {0}".format(stdin)
-    print "Expected: {0}".format(exp)
+    if not os.path.exists(os.path.join(dir, gulpcmd)):
+        print "{} not found".format(gulpcmd)
+        sys.exit(1)
+
+
+    print "Running {} in {}".format(" ".join(args), dir)
+
+    if stdin:
+        print "STDIN: {}".format(stdin)
+
+    print "Expected: {}".format(exp)
     print
 
     myenv = os.environ
     myenv["GULP_LAUNCHER_TRACE"] = "1"
 
     if setup:
-        print "Setting up: {0}".format(setup)
+        print "Setting up: {}".format(setup)
         print
         subprocess.Popen(setup, shell=True, cwd=dir).communicate()
 
     try:
-        p = subprocess.Popen(cmd, cwd=dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, env=myenv, shell=True)
-        out, err = p.communicate(stdin + "\n")
+        p = subprocess.Popen(args, cwd=dir, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, env=myenv)
+        if stdin:
+            out, err = p.communicate(stdin)
+        else:
+            out, err = p.communicate()
     except (OSError, ValueError), e:
-        print >>sys.stderr, "Execution failed:", e
-
-    print "Output:"
-    print(out)
-    print
+        out = ""
+        err = e
 
     if cleanup:
         print "Cleaning up: {0}".format(cleanup)
         print
         subprocess.Popen(cleanup, shell=True, cwd=dir).communicate()
 
+    if out:
+        print "Output:"
+        print(out)
+        print
+
     if err:
         print "Error:"
-        print err
+        print(err)
         print
 
     if exp in out:

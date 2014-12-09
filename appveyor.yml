@@ -2,7 +2,7 @@ before_test:
   - cinst Cygwin
 test_script:
   - cd tests & python tests.py & cd ..
-  - bash ./tests/tests.sh
+  - cd tests & ../../bash/gulp & cd ..
 before_build:
   - cinst PyWin32
 build_script:

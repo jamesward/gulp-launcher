@@ -13,7 +13,7 @@ def run_test(dir, exp, stdin, setup, cleanup, args):
 
     if not os.path.exists(os.path.join(dir, gulpcmd)):
         print "{} not found".format(gulpcmd)
-        sys.exit(1)
+#        sys.exit(1)
 
 
     print "Running {} in {}".format(" ".join(args), dir)

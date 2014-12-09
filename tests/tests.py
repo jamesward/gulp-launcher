@@ -94,4 +94,4 @@ run_test("node_carret0.10.33", "Starting 'help'", "", "", "", [])
 run_test("node_0.10.33", "Starting 'help'", "", "", "", [])
 
 # Node 0.10.33 with a specified task
-run_test("node_0.10.33", "Task 'asdf' is not in your gulpfile", "", "", "", ["asdf"])
+#run_test("node_0.10.33", "Task 'asdf' is not in your gulpfile", "", "", "", ["asdf"])

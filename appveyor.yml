@@ -10,8 +10,8 @@ build_script:
 before_test:
   - cinst Cygwin
 test_script:
-  - cd tests & python tests.py ../python/dist/gulp.exe
-  - cd tests & python tests.py "bash ../bash/gulp"
+  - cd tests & bash tests.sh ../../python/dist/gulp.exe
+  - cd tests & bash tests.sh "bash ../../bash/gulp"
 
 before_deploy:
   - cinst 7zip.commandline

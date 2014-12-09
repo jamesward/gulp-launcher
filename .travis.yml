@@ -1,5 +1,5 @@
 language: bash
-script: cd tests; python tests.py
+script: cd tests; bash tests.sh ../../bash/gulp
 os:
   - linux
   - osx

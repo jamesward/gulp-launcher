@@ -4,7 +4,7 @@ if len(sys.argv) >= 2:
     gulpcmd = os.path.normpath(sys.argv[1])
 else:
     if platform.system() == "Windows":
-        gulpcmd = os.path.normpath("../python/dist/gulp.exe")
+        gulpcmd = os.path.normpath("../../python/dist/gulp.exe")
     else:
         gulpcmd = os.path.normpath("../../bash/gulp")
 

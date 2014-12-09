@@ -1,22 +1,19 @@
 import subprocess, sys, os, platform
 
 if len(sys.argv) >= 2:
-    gulpcmd = os.path.normpath(sys.argv[1])
+    gulpcmd = sys.argv[1].split(" ")
 else:
     if platform.system() == "Windows":
-        gulpcmd = os.path.normpath("../../python/dist/gulp.exe")
+        gulpcmd = [os.path.normpath("../../python/dist/gulp.exe")]
+        # gulpcmd = ["python", os.path.normpath("../../python/gulp.py")]
     else:
-        gulpcmd = os.path.normpath("../../bash/gulp")
+        gulpcmd = ["bash", os.path.normpath("../../bash/gulp")]
 
 def run_test(dir, exp, stdin, setup, cleanup, args):
-    args.insert(0, gulpcmd)
+    cmd = gulpcmd
+    cmd.extend(args)
 
-    if not os.path.exists(os.path.join(dir, gulpcmd)):
-        print "{} not found".format(gulpcmd)
-#        sys.exit(1)
-
-
-    print "Running {} in {}".format(" ".join(args), dir)
+    print "Running {} in {}".format(" ".join(cmd), dir)
 
     if stdin:
         print "STDIN: {}".format(stdin)
@@ -33,7 +30,7 @@ def run_test(dir, exp, stdin, setup, cleanup, args):
         subprocess.Popen(setup, shell=True, cwd=dir).communicate()
 
     try:
-        p = subprocess.Popen(args, cwd=dir, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, env=myenv)
+        p = subprocess.Popen(cmd, cwd=dir, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE, env=myenv)
         if stdin:
             out, err = p.communicate(stdin)
         else:

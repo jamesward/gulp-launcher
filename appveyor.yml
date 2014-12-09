@@ -1,15 +1,18 @@
-before_test:
-  - cinst Cygwin
-test_script:
-  - cd tests & python tests.py ../python/dist/gulp.exe & cd ..
-  - cd tests & python tests.py ../bash/gulp & cd ..
+platform:
+  - x86
+  - x64
+
 before_build:
   - cinst PyWin32
 build_script:
   - cd python & build.bat & cd ..
-platform:
-  - x86
-  - x64
+
+before_test:
+#  - cinst Cygwin
+test_script:
+  - cd tests & python tests.py ../../python/dist/gulp.exe
+#  - cd tests & python tests.py "bash ../bash/gulp" & cd ..
+
 before_deploy:
   - cinst 7zip.commandline
 deploy_script:

@@ -1,5 +1,5 @@
 language: bash
-script: ./tests/tests.sh
+script: cd tests; python tests.py
 os:
   - linux
   - osx

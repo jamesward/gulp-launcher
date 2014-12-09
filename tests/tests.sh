@@ -25,24 +25,40 @@ run_test() {
   local ARGS=$6
 
   printf "Running $GULP in $DIR\n"
-  printf "STDIN: $IN\n"
-  printf "SETUP: $SETUP\n"
-  printf "CLEANUP: $CLEANUP\n"
-  printf "ARGS: $ARGS\n\n"
+
+  if [ "$IN" != "" ]; then
+    printf "STDIN: $IN\n"
+  fi
+
+  if [ "$ARGS" != "" ]; then
+    printf "ARGS: $ARGS\n\n"
+  fi
 
   cd $DIR
 
   if [ "$SETUP" != "" ]; then
+    printf "SETUP: $SETUP\n"
     $SETUP
   fi
 
-  if [ "$IN" == "" ]; then
-    local OUTPUT=$($GULP $ARGS)
+  if [ "$ARGS" == "" ]; then
+    if [ "$IN" == "" ]; then
+      $GULP > output.txt
+    else
+      echo $IN | $GULP $ARGS > output.txt
+    fi
+    local OUTPUT=$(cat output.txt)
+    rm output.txt
   else
-    local OUTPUT=$(echo $IN | $GULP $ARGS)
+    if [ "$IN" == "" ]; then
+      local OUTPUT=$($GULP $ARGS)
+    else
+      local OUTPUT=$(echo $IN | $GULP $ARGS)
+    fi
   fi
 
   if [ "$CLEANUP" != "" ]; then
+    printf "CLEANUP: $CLEANUP\n"
     $CLEANUP
   fi
 
@@ -90,17 +106,6 @@ run_test "node_carret0.10.33" "Starting 'help'"
 
 # Node 0.10.33
 run_test "node_0.10.33" "Starting 'help'"
-
-echo "try 1: $(grep)"
-
-echo "try 2: $(grep -v)"
-
-cd node_0.10.33
-echo "try 3: $(../../python/dist/gulp.exe foo)"
-
-echo "try 4: $($GULP foo)"
-cd ..
-
 
 # Node 0.10.33 with a specified task
 run_test "node_0.10.33" "Task 'asdf' is not in your gulpfile" "" "" "" "asdf"

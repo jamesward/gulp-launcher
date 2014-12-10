@@ -13,6 +13,8 @@ if [ "$APPVEYOR_REPO_TAG" == "true" ]; then
     --repo gulp-launcher \
     --tag $APPVEYOR_REPO_TAG_NAME
 
+  chmod +x bash/gulp
+
   bin/windows/amd64/github-release.exe upload \
     --user jamesward \
     --repo gulp-launcher \

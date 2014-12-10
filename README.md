@@ -1,12 +1,24 @@
 Gulp Launcher
 =============
 
-Automates the install of gulp and its dependencies.
+Automates the install of [gulp](http://gulpjs.com/) and its dependencies (Node, NPM, etc).  Like this (with nothing pre-installed):
+```
+$ ./gulp
+Downloading jq 1.3 for x86_64 MAC
+Downloading Node 0.10.33 for x86_64 MAC
+... npm install output ...
+[09:13:25] Using gulpfile ~/projects/gulp-starter/gulpfile.js
+[09:13:25] Starting 'default'...
+[09:13:25] Finished 'default' after 7.28 μs
+```
+
 
 Downloads
 ---------
 
-Grab the latest `gulp` and `gulp.exe` from [Releases](https://github.com/jamesward/gulp-launcher/releases).
+Grab the latest `gulp` (Linux, Mac, and Cygwin) or `gulp.exe` (Windows) from [Releases](https://github.com/jamesward/gulp-launcher/releases).
+
+Or if you don't have an existing gulp build, grab the [gulp-starter](https://github.com/jamesward/gulp-starter) project.
 
 
 Usage

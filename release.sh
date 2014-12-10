@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$APPVEYOR_REPO_TAG" == "true" ]; then
+if [ "$APPVEYOR_REPO_TAG" == "true"] && [ "$APPVEYOR_REPO_BRANCH" != "master" ]; then
 
   echo "Shipping a release for $APPVEYOR_REPO_BRANCH"
 

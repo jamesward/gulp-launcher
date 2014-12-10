@@ -6,7 +6,7 @@ Automates the install of gulp and its dependencies.
 Downloads
 ---------
 
-TODO
+Grab the latest `gulp` and `gulp.exe` from [Releases](https://github.com/jamesward/gulp-launcher/releases).
 
 
 Usage
@@ -29,12 +29,12 @@ Developer Info
 Bash Version (Linux, Mac, and Cygwin)
 * [Source](bash/gulp)
 * No compile / build needed
-* Run the tests: `tests/tests.sh`
+* Run the tests: `cd tests; ./tests.sh ../../bash/gulp`
 
 Python Version (Windows only right now)
 * [Source](python/gulp.py)
 * Compile on Windows with: `cd python; build.bat`
-* Run the tests: `tests\tests.bat`
+* Run the tests: `cd tests & bash tests.sh ../../python/dist/gulp.exe`
 
 CI & Releases
 * [AppVeyor](http://www.appveyor.com) builds the exe, runs the tests for both the bash (Cygwin) and the native launcher

@@ -64,9 +64,7 @@ function get_system_info() {
 # Sets:
 #  JQ_BIN 
 #
-function download_jq() { 
-
-  get_system_info
+function download_jq() {
 
   if [ "$JQ_BIN" == "" ]; then
     readonly JQ_BIN=$BASE_LOCAL_DIR/tools/jq-$JQ_VERSION
@@ -182,8 +180,6 @@ function download_node() {
 
   if [ "$NODE_BIN" == "" ]; then
 
-    get_system_info
-
     get_node_version
 
     # download Node binary
@@ -298,6 +294,13 @@ function run_gulp() {
 #
 # Main
 #
+
+get_system_info
+
+# Mac Special Sauce - Launching a bash script from Finder sets the PWD to the user's home dir
+[[ "$OS" == "$OS_MAC" ]] && [[ "$HOME" == "$PWD" ]] && [[ "${#residual_args}" == "0" ]] && {
+  cd "$(dirname "$(realpath "$0")")"
+}
 
 if [ ! -e package.json ]; then
   echo "You need to run gulp in a directory containing a package.json file."

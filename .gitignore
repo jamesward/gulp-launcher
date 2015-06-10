@@ -6,3 +6,4 @@ windows/gulp.spec
 windows/gulpfile.js
 windows/build/
 windows/package.json
+/.idea/

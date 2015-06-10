@@ -299,7 +299,7 @@ get_system_info
 
 # Mac Special Sauce - Launching a bash script from Finder sets the PWD to the user's home dir
 [[ "$OS" == "$OS_MAC" ]] && [[ "$HOME" == "$PWD" ]] && [[ "${#residual_args}" == "0" ]] && {
-  cd "$(dirname "$(realpath "$0")")"
+  cd "$(dirname "$0")"
 }
 
 if [ ! -e package.json ]; then

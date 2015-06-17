@@ -104,7 +104,8 @@ def get_node_version():
     else:
         nrv = get_raw_node_version()
         if any([c in nrv for c in "^x~<>"]):
-            cf.NODE_VERSION = urllib2.urlopen("https://semver.io/node/resolve/" + nrv).read()
+            url = "https://semver.io/node/resolve/" + nrv
+            cf.NODE_VERSION = urllib2.urlopen(urllib2.quote(url,':/')).read()
         else:
             cf.NODE_VERSION = get_raw_node_version()
 

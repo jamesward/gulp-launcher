@@ -106,3 +106,6 @@ run_test "node_tilde0.10.33" "Starting 'help'"
 
 # Node ^0.10.33
 run_test "node_carret0.10.33" "Starting 'help'"
+
+# Node >= 0.10.33
+run_test "node_gt-eq-space0.10.0" "Starting 'help'"

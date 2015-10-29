@@ -3,10 +3,10 @@
 # A Gulp Launcher for *nix and Cygwin
 #
 
-readonly JQ_VERSION=1.3
-readonly DEFAULT_NODE_VERSION=0.10.33
-readonly DEFAULT_NPM_VERSION=1.4.12
-readonly DEFAULT_GULP_VERSION=3.8.10
+readonly JQ_VERSION=1.4
+readonly DEFAULT_NODE_VERSION=4.2.1
+readonly DEFAULT_NPM_VERSION=2.14.7
+readonly DEFAULT_GULP_VERSION=3.9.0
 readonly BASE_LOCAL_DIR=$HOME/.gulp-launcher
 
 
@@ -22,7 +22,7 @@ readonly ARCH_64="x86_64"
 # Sets:
 #  OS
 #  ARCH
-#  
+#
 function get_system_info() {
   if [ "$OS" != "$OS_LINUX" ] && [ "$OS" != "$OS_MAC" ] && [ "$OS" != "$OS_CYGWIN" ]; then
 
@@ -62,7 +62,7 @@ function get_system_info() {
 #  ARCH_64
 #
 # Sets:
-#  JQ_BIN 
+#  JQ_BIN
 #
 function download_jq() {
 
@@ -71,26 +71,26 @@ function download_jq() {
 
     if [ ! -e $JQ_BIN ]; then
       $(mkdir -p $BASE_LOCAL_DIR/tools)
-    
-      local JQ_HOST="stedolan.github.io"
+
+      local JQ_HOST="github.com"
 
       if [ "$OS" == "$OS_LINUX" ] && [ "$ARCH" == "$ARCH_32" ]; then
-        local JQ_PATH="/jq/download/linux32/jq-$JQ_VERSION/jq"
+        local JQ_PATH="/stedolan/jq/releases/download/jq-$JQ_VERSION/jq-linux-x86"
       elif [ "$OS" == "$OS_LINUX" ] && [ "$ARCH" == "$ARCH_64" ]; then
-        local JQ_PATH="/jq/download/linux64/jq-$JQ_VERSION/jq"
+        local JQ_PATH="/stedolan/jq/releases/download/jq-$JQ_VERSION/jq-linux-x86_64"
       elif [ "$OS" == "$OS_MAC" ] && [ "$ARCH" == "$ARCH_32" ]; then
-        local JQ_PATH="/jq/download/osx32/jq-$JQ_VERSION/jq"
+        local JQ_PATH="/stedolan/jq/releases/download/jq-$JQ_VERSION/jq-osx-x86"
       elif [ "$OS" == "$OS_MAC" ] && [ "$ARCH" == "$ARCH_64" ]; then
-        local JQ_PATH="/jq/download/osx64/jq-$JQ_VERSION/jq"
+        local JQ_PATH="/stedolan/jq/releases/download/jq-$JQ_VERSION/jq-osx-x86_64"
       elif [ "$OS" == "$OS_CYGWIN" ] && [ "$ARCH" == "$ARCH_32" ]; then
-        local JQ_PATH="/jq/download/win32/jq-$JQ_VERSION/jq-$JQ_VERSION.exe"
+        local JQ_PATH="/stedolan/jq/releases/download/jq-$JQ_VERSION/jq-win32.exe"
       elif [ "$OS" == "$OS_CYGWIN" ] && [ "$ARCH" == "$ARCH_64" ]; then
-        local JQ_PATH="/jq/download/win64/jq-$JQ_VERSION/jq-$JQ_VERSION.exe"
+        local JQ_PATH="/stedolan/jq/releases/download/jq-$JQ_VERSION/jq-win64.exe"
       fi
 
       echo "Downloading jq $JQ_VERSION for $ARCH $OS"
 
-      $(curl -s -o $JQ_BIN https://$JQ_HOST$JQ_PATH)
+      $(curl -s -L -o $JQ_BIN https://$JQ_HOST$JQ_PATH)
 
       $(chmod +x $JQ_BIN)
     fi
@@ -108,7 +108,7 @@ function download_jq() {
 #  NODE_RAW_VERSION
 #
 function get_raw_node_version() {
-  
+
   if [ "$NODE_RAW_VERSION" == "" ]; then
     download_jq
 

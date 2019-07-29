@@ -5,4 +5,4 @@ gulp.task("help", function(next) {
   next();
 });
 
-gulp.task("default", ["help"]);
+gulp.task("default", gulp.series("help"));

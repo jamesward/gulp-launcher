@@ -7,7 +7,7 @@
   "author": "James Ward",
   "private": true,
   "devDependencies": {
-    "gulp": "^3.6.2"
+    "gulp": "^4.0.2"
   },
   "engines": {
     "node": ">= 0.10.33",

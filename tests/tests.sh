@@ -56,7 +56,7 @@ run_test() {
 
   if [ "$CLEANUP" != "" ]; then
     printf "CLEANUP: $CLEANUP\n"
-    $CLEANUP
+    eval "$CLEANUP"
   fi
 
   cd ..
@@ -80,13 +80,13 @@ run_test "node_0.10.33" "Task 'asdf' is not in your gulpfile" "" "" "" "asdf"
 
 # Gulp dep isn't set and we tell the gulp launcher not to add it
 run_test "no_gulp_dep" "No Gulp dependency was found" "no" "rm -r node_modules"
-# Gulp dep isn't set and we tell the gulp launcher to add it
+# Gulp dep isn't set and we tell the gulp launcher to add the latest
 run_test "no_gulp_dep" "Starting 'help'" "yes" "cp package.json package.json-" "mv package.json- package.json"
 
 # Node engine isn't set and we tell the gulp launcher not to add it
 run_test "no_node" "Exiting because the Node version could not be determined." "no"
 # Node engine isn't set and we tell the gulp launcher to add it
-run_test "no_node" "Starting 'help'" "yes" "cp package.json package.json-" "mv package.json- package.json"
+run_test "no_node" "Starting 'help'" "yes" "cp package.json package.json-" "mv package.json- package.json; rm package-lock.json"
 
 # Node 0.10.x without a gulpfile and auto-add one
 run_test "node_0.10.x_without_gulpfile" "Starting 'default'" "yes" "" "rm gulpfile.js"
@@ -108,4 +108,4 @@ run_test "node_tilde0.10.33" "Starting 'help'"
 run_test "node_carret0.10.33" "Starting 'help'"
 
 # Node >= 0.10.33
-run_test "node_gt-eq-space0.10.0" "Starting 'help'"
+run_test "node_gt-eq-space0.10.0" "Starting 'help'" "no" "" "rm package-lock.json"

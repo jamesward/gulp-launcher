@@ -254,6 +254,8 @@ download_gulp() {
 
     download_node
 
+    export PATH=$PATH:$(dirname $NPM_BIN)
+
     $NPM_BIN config set spin=false
 
     if [ "$GULP_RAW_VERSION" == "null" ]; then

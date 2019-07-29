@@ -1,6 +1,6 @@
 environment:
   GITHUB_TOKEN:
-    secure: cyhon2hMYiAUayELrLwKZsZ9YPLrjbmOvDOOxCuSoY9uJgJ75Pwb21gG4cDi76wH
+    secure: z9QncIJ4J0g1hQcwi364NWZXDyyVz3Q6gNVkra9pq5y+UuyWSJ0Pm6/Rf/cpvMDz
 
 platform:
   - x86
